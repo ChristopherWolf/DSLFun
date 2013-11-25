@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecuritySystemDSL", "SecuritySystemDSL\SecuritySystemDSL.csproj", "{123FEDF6-F3CC-4647-80CC-66396F5FA42D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecuritySystemDSL.UnitTests", "SecuritySystemDSL.UnitTests\SecuritySystemDSL.UnitTests.csproj", "{BE334165-A741-4BB6-9DCF-5AB85011960D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{123FEDF6-F3CC-4647-80CC-66396F5FA42D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123FEDF6-F3CC-4647-80CC-66396F5FA42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123FEDF6-F3CC-4647-80CC-66396F5FA42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123FEDF6-F3CC-4647-80CC-66396F5FA42D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE334165-A741-4BB6-9DCF-5AB85011960D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE334165-A741-4BB6-9DCF-5AB85011960D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE334165-A741-4BB6-9DCF-5AB85011960D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE334165-A741-4BB6-9DCF-5AB85011960D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
