@@ -5,6 +5,9 @@
 ## External DSL Topics
 
 ### Definitions
+- DSL: Domain specific language. 
+A limited language built for a specific business purpose. Not a general language. Can be readable or even writable by business people.
+
 - Semantic Model: The model populated by the DSL
 
 - Recursive Descent Parser

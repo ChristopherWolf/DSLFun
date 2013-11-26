@@ -39,25 +39,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SemanticModel\AbstractEvent.cs" />
+    <Compile Include="SemanticModel\State.cs" />
+    <Compile Include="SemanticModel\Transition.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SemanticModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <!-- Folder containing Antlr4BuildTasks.dll -->
-    <Antlr4BuildTaskPath>$(ProjectDir)..\Reference\Antlr4</Antlr4BuildTaskPath>
-    <!-- Path to the ANTLR Tool itself. -->
-    <Antlr4ToolPath>$(ProjectDir)..\Reference\Antlr4\antlr4-csharp-4.0.1-SNAPSHOT-complete.jar</Antlr4ToolPath>
-  </PropertyGroup>
-  <Import Project="$(ProjectDir)..\Reference\Antlr4\Antlr4.targets" />
-  <!--<PropertyGroup>
-    Folder containing Antlr4BuildTasks.dll
-    <Antlr4BuildTaskPath>C:\Dev\DSL_Research\Src\Reference\Antlr4</Antlr4BuildTaskPath>
-    Path to the ANTLR Tool itself.
-    <Antlr4ToolPath>C:\Dev\DSL_Research\Src\Reference\Antlr4\antlr4-csharp-4.0.1-SNAPSHOT-complete.jar</Antlr4ToolPath>
-  </PropertyGroup>
-  <Import Project="C:\Dev\DSL_Research\Src\Reference\Antlr4\Antlr4.targets" />-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
