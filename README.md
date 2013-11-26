@@ -1,4 +1,4 @@
-DSLFun
-======
+# DSL Research
 
-Source code for DSL research project
+## TODO: Arrange this into readable sections
+
