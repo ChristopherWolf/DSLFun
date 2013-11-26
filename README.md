@@ -25,7 +25,7 @@ Here a is a terminal symbol because no rule exists which would change it in to s
 ### Nonterminal Symbols
 
 Nonterminal symbols are those symbols which can be replaced. They may also be called simply syntactic variables. A formal grammar includes a start symbol, a designated member of the set of nonterminals from which all the strings in the language may be derived by successive applications of the production rules. In fact, the language defined by a grammar is precisely the set of terminal strings that can be so derived.
-
+.
 #### Example
 
 For instance, the following represents an integer (which may be signed) expressed in a variant of Backus–Naur form:
