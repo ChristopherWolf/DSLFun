@@ -4,6 +4,14 @@
 
 ## External DSL Topics
 
+### Definitions
+- Semantic Model
+-- The model populated by the DSL
+
+### Steps to get from source DSL to executable code
+- Lexical Analysis (Lexing)
+- Parsing
+
 ### Terminal Symbols
 
 Terminal symbols are literal symbols which may appear in the inputs to or outputs from the production rules of a formal grammar and which cannot be changed using the rules of the grammar (this is the reason for the name "terminal").
@@ -29,10 +37,11 @@ In this example, the symbols (-,0,1,2,3,4,5,6,7,8,9) are terminal symbols and <d
 
 ### Backus–Naur Form
 
+
 ### Syntax Trees
 
 #### Parse Tree
-.
+
 #### Abstract Syntax Tree
 
 ## Internal DSL Topics
