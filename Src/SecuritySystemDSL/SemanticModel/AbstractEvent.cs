@@ -26,20 +26,4 @@ namespace SecuritySystemDSL.SemanticModel
 			get { return _code; }
 		}
 	}
-
-	public class Command : AbstractEvent
-	{
-		public Command(string name, string code) 
-			: base(name, code)
-		{
-		}
-	}
-
-	public class Event : AbstractEvent
-	{
-		public Event(string name, string code)
-			: base(name, code)
-		{
-		}
-	}
 }

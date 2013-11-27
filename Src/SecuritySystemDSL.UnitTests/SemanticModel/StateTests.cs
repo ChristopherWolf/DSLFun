@@ -160,6 +160,26 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 	}
 
+	public class WhenGettingAllTargetStates
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnTheExpectedStates(IFixture fixture, List<Tuple<Event, State>> eventAndStatePair)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			eventAndStatePair.ForEach(x => sut.AddTransition(x.Item1, x.Item2));
+
+			var expected = eventAndStatePair.Select(x => x.Item2);
+
+			// Act
+			var result = sut.GetAllTargets();
+
+			// Assert
+			result.Should().Equal(expected);
+		}
+	}
+
 	public class WhenAddingActions
 	{
 		[Theory, AutoFakeItEasyData]
@@ -179,21 +199,6 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 	public class WhenExecutingActions
 	{
-//		[Theory, AutoFakeItEasyData]
-//		public void ItShouldCallTheCommandChannelsSendMethodForEachAction(IFixture fixture, List<Command> commands, [Frozen]ICommandChannel commandChannel)
-//		{
-//			// Arrange
-//			var sut = fixture.Create<State>();
-//
-//			commands.ForEach(sut.AddAction);
-//
-//			// Act
-//			sut.ExecuteActions(commandChannel);
-//
-//			// Assert
-//			A.CallTo(() => commandChannel.Send(A<string>._)).MustHaveHappened(Repeated.Exactly.Times(commands.Count));
-//		}
-
 		[Theory, AutoFakeItEasyData]
 		public void ItShouldCallTheCommandChannelsSendMethodWithTheCorrectCommandCodes(IFixture fixture, List<Command> commands, [Frozen]ICommandChannel commandChannel)
 		{

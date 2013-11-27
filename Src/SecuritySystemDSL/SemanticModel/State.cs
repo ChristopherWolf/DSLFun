@@ -8,6 +8,12 @@ namespace SecuritySystemDSL.SemanticModel
 	public interface IState
 	{
 		string Name { get; }
+		void AddTransition(Event trigger, State targetState);
+		bool HasTransition(string eventCode);
+		IState FindTargetState(string eventCode);
+		IEnumerable<IState> GetAllTargets();
+		void AddAction(Command command);
+		void ExecuteActions(ICommandChannel commandChannel);
 	}
 
 	public class State : IState
@@ -54,6 +60,11 @@ namespace SecuritySystemDSL.SemanticModel
 			var transition = _transitions[eventCode];
 
 			return transition.Target;
+		}
+
+		public IEnumerable<IState> GetAllTargets()
+		{
+			return _transitions.Values.Select(x => x.Target);
 		}
 
 		public void AddAction(Command command)

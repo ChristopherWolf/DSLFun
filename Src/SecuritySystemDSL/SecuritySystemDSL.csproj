@@ -39,9 +39,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SemanticModel\EventEntities.cs" />
+    <Compile Include="SemanticModel\Command.cs" />
+    <Compile Include="SemanticModel\Event.cs" />
+    <Compile Include="SemanticModel\AbstractEvent.cs" />
     <Compile Include="SemanticModel\CommandChannel.cs" />
     <Compile Include="SemanticModel\State.cs" />
+    <Compile Include="SemanticModel\StateMachine.cs" />
     <Compile Include="SemanticModel\Transition.cs" />
   </ItemGroup>
   <ItemGroup>

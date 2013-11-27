@@ -84,9 +84,9 @@
   <ItemGroup>
     <Compile Include="SemanticModel\CommandTests.cs" />
     <Compile Include="SemanticModel\EventTests.cs" />
+    <Compile Include="SemanticModel\StateMachineTests.cs" />
     <Compile Include="SemanticModel\StateTests.cs" />
     <Compile Include="SemanticModel\TransitionTests.cs" />
-    <Compile Include="TestingNotes\GenericTestsSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
