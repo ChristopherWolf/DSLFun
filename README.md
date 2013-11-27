@@ -38,11 +38,13 @@ Takes stream of tokens from lexer and arranges into parse tree and AST.
 
 The next stage is parsing or syntactic analysis, which is checking that the tokens form an allowable expression. This is usually done with reference to a context-free grammar which recursively defines components that can make up an expression and the order in which they must appear. However, not all rules defining programming languages can be expressed by context-free grammars alone, for example type validity and proper declaration of identifiers. These rules can be formally expressed with attribute grammars.
 
-3. Semantic Parsing (Compiler, interpreter or translator)
+3. Semantic Parsing (Compiler, generator, interpreter or translator)
 
 AST can be walked to populate Semantic Model or to generate source code in a different language.
 
 The final phase is semantic parsing or analysis, which is working out the implications of the expression just validated and taking the appropriate action. In the case of a calculator or interpreter, the action is to evaluate the expression or program, a compiler, on the other hand, would generate some kind of code. Attribute grammars can also be used to define these actions.
+
+A compiler is likely to perform many or all of the following operations: lexical analysis, preprocessing, parsing, semantic analysis (Syntax-directed translation), code generation, and code optimization.
 
 
 ### Terminal Symbols

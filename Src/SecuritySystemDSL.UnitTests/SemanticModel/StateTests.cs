@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.UnitTests.TestingHelpers;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
@@ -62,11 +63,27 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "Transitions");
 
 			// Assert
 			assertion.Verify(constructors);
 			assertion.Verify(readOnlyProperties);
+		}
+	}
+
+	public class WhenAddingTransitions
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldUseTheEventCodeAsAKey(IFixture fixture, Event @event, State targetState)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			// Act
+			sut.AddTransition(@event, targetState);
+
+			// Assert
+			sut.Transitions.Should().Contain(pair => pair.Key.Equals(@event.Name));
 		}
 	}
 }

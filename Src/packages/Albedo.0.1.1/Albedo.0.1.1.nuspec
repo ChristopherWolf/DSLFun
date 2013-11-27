@@ -10,8 +10,6 @@
     <projectUrl>https://github.com/ploeh/Albedo</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET library targeted at making Reflection programming more consistent, using a common set of abstractions and utilities.</description>
-    <releaseNotes />
-    <copyright />
     <language>en-US</language>
   </metadata>
 </package>

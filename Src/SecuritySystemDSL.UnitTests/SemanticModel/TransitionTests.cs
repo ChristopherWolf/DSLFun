@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.UnitTests.TestingHelpers;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
@@ -45,19 +46,19 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.TransitionTests
 			assertion.Verify(readOnlyProperties);
 		}
 
-		[Theory, AutoFakeItEasyData]
-		public void TheEventCodeShouldBeCorrect(IFixture fixture, [Frozen]Event trigger)
-		{
-			// Arrange
-			var expected = trigger.Code;
-
-			var sut = fixture.Create<Transition>();
-
-			// Act
-			var result = sut.EventCode;
-
-			// Assert
-			result.Should().Be(expected);
-		}
+//		[Theory, AutoFakeItEasyData]
+//		public void TheEventCodeShouldBeCorrect(IFixture fixture, [Frozen]Event trigger)
+//		{
+//			// Arrange
+//			var expected = trigger.Code;
+//
+//			var sut = fixture.Create<Transition>();
+//
+//			// Act
+//			var result = sut.EventCode;
+//
+//			// Assert
+//			result.Should().Be(expected);
+//		}
 	}
 }

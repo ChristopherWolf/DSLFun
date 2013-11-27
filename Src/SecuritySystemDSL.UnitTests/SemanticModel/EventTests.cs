@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.UnitTests.TestingHelpers;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using SecuritySystemDSL.SemanticModel;
@@ -7,7 +8,7 @@ using Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace SecuritySystemDSL.UnitTests.SemanticModel.AbstractEventTests.EventTests
+namespace SecuritySystemDSL.UnitTests.SemanticModel.EventTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints
