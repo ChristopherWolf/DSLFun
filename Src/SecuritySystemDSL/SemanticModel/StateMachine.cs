@@ -1,37 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 
 namespace SecuritySystemDSL.SemanticModel
 {
 	public class StateMachine
 	{
-		readonly IState _startingState;
+		readonly State _startingState;
+		readonly IList<Event> _resetEvents;
 
-		public StateMachine(IState startingState)
+		public StateMachine(State startingState)
 		{
 			if (startingState == null) throw new ArgumentNullException("startingState");
 
 			_startingState = startingState;
+
+			_resetEvents = new List<Event>();
 		}
 
-		public IState StartingState
+		public State StartingState
 		{
 			get { return _startingState; }
 		}
 
-		public IEnumerable<IState> AllPossibleStates
+		public IEnumerable<Event> ResetEvents { get { return _resetEvents.Repeat(); } }
+
+		public void AddResetEvent(Event resetEvent)
 		{
-			get { return DeterminePossibleStates(); }
+			if (resetEvent == null) throw new ArgumentNullException("resetEvent"); 
+
+			_resetEvents.Add(resetEvent);
 		}
 
-		IEnumerable<IState> DeterminePossibleStates()
+		public bool IsResetEvent(string eventCode)
 		{
-			var list = new List<IState>();
+			if (eventCode == null) throw new ArgumentNullException("eventCode");
 
-			
-
-			return list;
+			return _resetEvents.Any(x => x.Code == eventCode);
 		}
 	}
 }

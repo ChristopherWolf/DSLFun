@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SemanticModel\CommandTests.cs" />
+    <Compile Include="SemanticModel\ControllerTests.cs" />
     <Compile Include="SemanticModel\EventTests.cs" />
     <Compile Include="SemanticModel\StateMachineTests.cs" />
     <Compile Include="SemanticModel\StateTests.cs" />

@@ -40,7 +40,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "AllPossibleStates");
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "ResetEvents");
 
 			// Assert
 			assertion.Verify(constructors);
@@ -48,39 +48,51 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 		}
 	}
 
-	public class WhenGettingAllPossibleStates
+	public class WhenAddingResetEvents
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheExpectedStates(IFixture fixture, [Frozen]IState start)
+		public void ItShouldAddThePassedInEventAsAResetEvent(IFixture fixture, Event resetEvent)
 		{
 			// Arrange
-
-			fixture.Register<IState>(() =>
-				{
-					var newState = A.Fake<IState>();
-
-					var target1 = A.Fake<IState>();
-					var target2 = A.Fake<IState>();
-					var target3 = A.Fake<IState>();
-
-					A.CallTo(() => newState.GetAllTargets()).Returns(new[] {target1, target2, target3, target1});
-
-					return newState;
-				});
-
-			var targets = fixture.Create<IEnumerable<IState>>().ToList();
-
-			A.CallTo(() => start.GetAllTargets()).Returns(targets);
-
-			var expected = start.SelectMany();
-
 			var sut = fixture.Create<StateMachine>();
 
 			// Act
-			var result = sut.AllPossibleStates;
+			sut.AddResetEvent(resetEvent);
 
 			// Assert
-			result.Should().BeEquivalentTo(expected);
+			sut.ResetEvents.Should().HaveCount(1);
+			sut.ResetEvents.Single().Should().Be(resetEvent);
+		}
+	}
+
+	public class WhenCheckingIfAnEventIsAResetEvent
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnTrueIfTheEventIsAResetEvent(IFixture fixture, Event @event)
+		{
+			// Arrange
+			var sut = fixture.Create<StateMachine>();
+
+			sut.AddResetEvent(@event);
+
+			// Act
+			var result = sut.IsResetEvent(@event.Code);
+
+			// Assert
+			result.Should().BeTrue();
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnFalseIfTheEventIsNotAResetEvent(IFixture fixture, string eventCode)
+		{
+			// Arrange
+			var sut = fixture.Create<StateMachine>();
+
+			// Act
+			var result = sut.IsResetEvent(eventCode);
+
+			// Assert
+			result.Should().BeFalse();
 		}
 	}
 }

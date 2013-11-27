@@ -31,17 +31,6 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldImplementTheExpectedRoles(IFixture fixture)
-		{
-			// Arrange
-			// Act
-			var sut = fixture.Create<State>();
-
-			// Assert
-			sut.Should().BeAssignableTo<IState>();
-		}
-
-		[Theory, AutoFakeItEasyData]
 		public void AllConstructorArgumentsShouldBeExposedAsWellBehavedReadOnlyProperties(IFixture fixture)
 		{
 			// Arrange
@@ -157,26 +146,6 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Assert
 			action.ShouldThrow<KeyNotFoundException>();
-		}
-	}
-
-	public class WhenGettingAllTargetStates
-	{
-		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheExpectedStates(IFixture fixture, List<Tuple<Event, State>> eventAndStatePair)
-		{
-			// Arrange
-			var sut = fixture.Create<State>();
-
-			eventAndStatePair.ForEach(x => sut.AddTransition(x.Item1, x.Item2));
-
-			var expected = eventAndStatePair.Select(x => x.Item2);
-
-			// Act
-			var result = sut.GetAllTargets();
-
-			// Assert
-			result.Should().Equal(expected);
 		}
 	}
 
