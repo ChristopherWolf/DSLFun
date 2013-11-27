@@ -46,6 +46,17 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 			assertion.Verify(constructors);
 			assertion.Verify(readOnlyProperties);
 		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldImplementTheExpectedRoles(IFixture fixture)
+		{
+			// Arrange
+			// Act
+			var sut = fixture.Create<StateMachine>();
+
+			// Assert
+			sut.Should().BeAssignableTo<IStateMachine>();
+		}
 	}
 
 	public class WhenAddingResetEvents

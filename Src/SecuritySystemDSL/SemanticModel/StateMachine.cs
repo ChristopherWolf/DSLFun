@@ -5,7 +5,15 @@ using Common;
 
 namespace SecuritySystemDSL.SemanticModel
 {
-	public class StateMachine
+	public interface IStateMachine 
+	{
+		State StartingState { get; }
+
+		void AddResetEvent(Event resetEvent);
+		bool IsResetEvent(string eventCode);
+	}
+
+	public class StateMachine : IStateMachine
 	{
 		readonly State _startingState;
 		readonly IList<Event> _resetEvents;
