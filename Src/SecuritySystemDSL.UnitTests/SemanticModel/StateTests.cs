@@ -1,33 +1,17 @@
 ﻿using System;
 using System.Linq;
 using Common.UnitTests.TestingHelpers;
-using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.SemanticComparison.Fluent;
 using SecuritySystemDSL.SemanticModel;
-using Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
 namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 // ReSharper restore CheckNamespace
 {
-//	#region Customizations
-//
-//	internal class TestCustomization : ICustomization
-//	{
-//		public void Customize(IFixture fixture) {}
-//	}
-//
-//	#endregion
-//
-//	#region Test Doubles
-//
-//	#endregion
-
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
@@ -63,7 +47,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "Transitions");
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "Transitions" && x.Name != "Actions");
 
 			// Assert
 			assertion.Verify(constructors);
@@ -74,16 +58,88 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenAddingTransitions
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldUseTheEventCodeAsAKey(IFixture fixture, Event @event, State targetState)
+		public void ItShouldUseTheEventCodeAsAKey(IFixture fixture, Event trigger, State targetState)
+		{
+			// Arrange
+			var expectedKey = trigger.Code;
+
+			var sut = fixture.Create<State>();
+
+			// Act
+			sut.AddTransition(trigger, targetState);
+
+			// Assert
+			sut.Transitions.Should().HaveCount(1);
+			sut.Transitions.Single().Key.Should().Be(expectedKey);
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldAddTheExpectedTransition(IFixture fixture, Event trigger, State targetState)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			var likeness = sut.AsSource()
+			                  .OfLikeness<Transition>()
+							  .OmitAutoComparison()
+			                  .With(x => x.Source).EqualsWhen((inputState, transition) => transition.Source == inputState)
+							  .With(x => x.Target).EqualsWhen((inputState, transition) => transition.Target == targetState)
+							  .With(x => x.Trigger).EqualsWhen((inputState, transition) => transition.Trigger == trigger);
+
+			// Act
+			sut.AddTransition(trigger, targetState);
+
+			// Assert
+			sut.Transitions.Should().HaveCount(1);
+			likeness.ShouldEqual(sut.Transitions.Single().Value);
+		}
+	}
+
+	public class WhenCheckingIfStateContainsATransition
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnTrueIfTheStateContainsTheTransition(IFixture fixture, Event trigger, State targetState)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			sut.AddTransition(trigger, targetState);
+
+			// Act
+			var result = sut.HasTransition(trigger.Code);
+
+			// Assert
+			result.Should().BeTrue();
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnFalseIfTheStateDoesNotContainTheTransition(IFixture fixture, string eventCode)
 		{
 			// Arrange
 			var sut = fixture.Create<State>();
 
 			// Act
-			sut.AddTransition(@event, targetState);
+			var result = sut.HasTransition(eventCode);
 
 			// Assert
-			sut.Transitions.Should().Contain(pair => pair.Key.Equals(@event.Name));
+			result.Should().BeFalse();
+		}
+	}
+
+	public class WhenAddingActions
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldAddThePassedInCommandAsAnAction(IFixture fixture, Command command)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			// Act
+			sut.AddAction(command);
+
+			// Assert
+			sut.Actions.Should().HaveCount(1);
+			sut.Actions.Single().Should().Be(command);
 		}
 	}
 }

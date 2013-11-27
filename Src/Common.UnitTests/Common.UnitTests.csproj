@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="TestingHelpers\AutoFakeItEasyDataAttribute.cs" />
     <Compile Include="EnumerableExtensionsTests.cs" />
-    <Compile Include="TestingHelpers\FixtureExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

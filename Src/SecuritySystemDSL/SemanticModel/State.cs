@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 
 namespace SecuritySystemDSL.SemanticModel
 {
@@ -10,12 +10,15 @@ namespace SecuritySystemDSL.SemanticModel
 		string Name { get; }
 
 		IEnumerable<KeyValuePair<string, Transition>> Transitions { get; }
+
+		IEnumerable<Command> Actions { get; }
 	}
 
 	public class State : IState
 	{
 		readonly string _name;
 		readonly IDictionary<string, Transition> _transitions;
+		readonly IList<Command> _actions;
 
 		public State(string name)
 		{
@@ -24,20 +27,35 @@ namespace SecuritySystemDSL.SemanticModel
 			_name = name;
 
 			_transitions = new Dictionary<string, Transition>();
+			_actions = new List<Command>();
 		}
 
-		public string Name
-		{
-			get { return _name; }
-		}
+		public string Name { get { return _name; } }
 
-		public IEnumerable<KeyValuePair<string, Transition>> Transitions { get { return _transitions; } }
+		public IEnumerable<KeyValuePair<string, Transition>> Transitions { get { return _transitions.Repeat(); } }
 
-		public void AddTransition(Event @event, State targetState)
+		public IEnumerable<Command> Actions { get { return _actions.Repeat(); } }
+
+		public void AddTransition(Event trigger, State targetState)
 		{
-			if (@event == null) throw new ArgumentNullException("@event");
+			if (trigger == null) throw new ArgumentNullException("trigger");
 			if (targetState == null) throw new ArgumentNullException("targetState");
 
+			_transitions.Add(trigger.Code, new Transition(this, trigger, targetState));
+		}
+
+		public bool HasTransition(string eventCode)
+		{
+			if (eventCode == null) throw new ArgumentNullException("eventCode");
+
+			return _transitions.ContainsKey(eventCode);
+		}
+
+		public void AddAction(Command command)
+		{
+			if (command == null) throw new ArgumentNullException("command");
+
+			_actions.Add(command);
 		}
 	}
 }
