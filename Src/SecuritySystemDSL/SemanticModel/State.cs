@@ -8,10 +8,6 @@ namespace SecuritySystemDSL.SemanticModel
 	public interface IState
 	{
 		string Name { get; }
-
-		IEnumerable<KeyValuePair<string, Transition>> Transitions { get; }
-
-		IEnumerable<Command> Actions { get; }
 	}
 
 	public class State : IState
@@ -51,11 +47,30 @@ namespace SecuritySystemDSL.SemanticModel
 			return _transitions.ContainsKey(eventCode);
 		}
 
+		public IState FindTargetState(string eventCode)
+		{
+			if (eventCode == null) throw new ArgumentNullException("eventCode");
+
+			var transition = _transitions[eventCode];
+
+			return transition.Target;
+		}
+
 		public void AddAction(Command command)
 		{
 			if (command == null) throw new ArgumentNullException("command");
 
 			_actions.Add(command);
+		}
+
+		public void ExecuteActions(ICommandChannel commandChannel)
+		{
+			if (commandChannel == null) throw new ArgumentNullException("commandChannel");
+
+			foreach (var action in Actions)
+			{
+				commandChannel.Send(action.Code);
+			}
 		}
 	}
 }

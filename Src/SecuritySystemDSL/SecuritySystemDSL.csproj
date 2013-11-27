@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemanticModel\EventEntities.cs" />
+    <Compile Include="SemanticModel\CommandChannel.cs" />
     <Compile Include="SemanticModel\State.cs" />
     <Compile Include="SemanticModel\Transition.cs" />
   </ItemGroup>

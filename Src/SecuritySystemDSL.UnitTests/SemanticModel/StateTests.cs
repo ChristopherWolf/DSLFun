@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common.UnitTests.TestingHelpers;
+using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Xunit;
 using Ploeh.SemanticComparison.Fluent;
 using SecuritySystemDSL.SemanticModel;
 using Xunit.Extensions;
@@ -126,6 +129,37 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 	}
 
+	public class WhenGettingTheTargetStateForAnEventCode
+	{
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldReturnTheExpectedTargetStateIfTheEventCodeIsUsed(IFixture fixture, Event trigger, State targetState)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			sut.AddTransition(trigger, targetState);
+
+			// Act
+			var result = sut.FindTargetState(trigger.Code);
+
+			// Assert
+			result.Should().BeSameAs(targetState);
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldThrowAKeyNotFoundExceptionIfTheEventCodeIsNotUsed(IFixture fixture, string eventCode)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			// Act
+			Action action = () => sut.FindTargetState(eventCode);
+
+			// Assert
+			action.ShouldThrow<KeyNotFoundException>();
+		}
+	}
+
 	public class WhenAddingActions
 	{
 		[Theory, AutoFakeItEasyData]
@@ -140,6 +174,50 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 			// Assert
 			sut.Actions.Should().HaveCount(1);
 			sut.Actions.Single().Should().Be(command);
+		}
+	}
+
+	public class WhenExecutingActions
+	{
+//		[Theory, AutoFakeItEasyData]
+//		public void ItShouldCallTheCommandChannelsSendMethodForEachAction(IFixture fixture, List<Command> commands, [Frozen]ICommandChannel commandChannel)
+//		{
+//			// Arrange
+//			var sut = fixture.Create<State>();
+//
+//			commands.ForEach(sut.AddAction);
+//
+//			// Act
+//			sut.ExecuteActions(commandChannel);
+//
+//			// Assert
+//			A.CallTo(() => commandChannel.Send(A<string>._)).MustHaveHappened(Repeated.Exactly.Times(commands.Count));
+//		}
+
+		[Theory, AutoFakeItEasyData]
+		public void ItShouldCallTheCommandChannelsSendMethodWithTheCorrectCommandCodes(IFixture fixture, List<Command> commands, [Frozen]ICommandChannel commandChannel)
+		{
+			// Arrange
+			var sut = fixture.Create<State>();
+
+			commands.ForEach(sut.AddAction);
+
+			var expected = commands.Select(x => x.Code);
+
+			var actual = new List<string>();
+
+			A.CallTo(() => commandChannel.Send(A<string>._)).Invokes(x =>
+				{
+					var a = x.GetArgument<string>(0);
+
+					actual.Add(a);
+				});
+
+			// Act
+			sut.ExecuteActions(commandChannel);
+
+			// Assert
+			actual.Should().Equal(expected);
 		}
 	}
 }
