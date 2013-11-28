@@ -4,7 +4,16 @@ using Common;
 
 namespace SecuritySystemDSL.SemanticModel
 {
-	public class State
+	public interface IState 
+	{
+		void AddTransition(Event trigger, IState targetState);
+		bool HasTransition(string eventCode);
+		IState FindTargetState(string eventCode);
+		void AddAction(Command command);
+		void ExecuteActions(ICommandChannel commandChannel);
+	}
+
+	public class State : IState
 	{
 		readonly string _name;
 		readonly IDictionary<string, Transition> _transitions;
@@ -22,9 +31,9 @@ namespace SecuritySystemDSL.SemanticModel
 
 		public string Name { get { return _name; } }
 
-		public IEnumerable<KeyValuePair<string, Transition>> Transitions { get { return _transitions.Repeat(); } }
+		public IEnumerable<Transition> Transitions { get { return _transitions.Values.Repeat(); } }
 
-		public void AddTransition(Event trigger, State targetState)
+		public void AddTransition(Event trigger, IState targetState)
 		{
 			if (trigger == null) throw new ArgumentNullException("trigger");
 			if (targetState == null) throw new ArgumentNullException("targetState");
@@ -39,7 +48,7 @@ namespace SecuritySystemDSL.SemanticModel
 			return _transitions.ContainsKey(eventCode);
 		}
 
-		public State FindTargetState(string eventCode)
+		public IState FindTargetState(string eventCode)
 		{
 			if (eventCode == null) throw new ArgumentNullException("eventCode");
 

@@ -7,7 +7,7 @@ namespace SecuritySystemDSL.SemanticModel
 {
 	public interface IStateMachine 
 	{
-		State StartingState { get; }
+		IState StartingState { get; }
 
 		void AddResetEvent(Event resetEvent);
 		bool IsResetEvent(string eventCode);
@@ -15,10 +15,10 @@ namespace SecuritySystemDSL.SemanticModel
 
 	public class StateMachine : IStateMachine
 	{
-		readonly State _startingState;
+		readonly IState _startingState;
 		readonly IList<Event> _resetEvents;
 
-		public StateMachine(State startingState)
+		public StateMachine(IState startingState)
 		{
 			if (startingState == null) throw new ArgumentNullException("startingState");
 
@@ -27,7 +27,7 @@ namespace SecuritySystemDSL.SemanticModel
 			_resetEvents = new List<Event>();
 		}
 
-		public State StartingState { get { return _startingState; } }
+		public IState StartingState { get { return _startingState; } }
 
 		public void AddResetEvent(Event resetEvent)
 		{

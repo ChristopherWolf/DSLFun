@@ -4,11 +4,11 @@ namespace SecuritySystemDSL.SemanticModel
 {
 	public class Transition
 	{
-		readonly State _source;
+		readonly IState _source;
 		readonly Event _trigger;
-		readonly State _target;
+		readonly IState _target;
 
-		public Transition(State source, Event trigger, State target)
+		public Transition(IState source, Event trigger, IState target)
 		{
 			if (source == null) throw new ArgumentNullException("source");
 			if (trigger == null) throw new ArgumentNullException("trigger");
@@ -19,7 +19,7 @@ namespace SecuritySystemDSL.SemanticModel
 			_target = target;
 		}
 
-		public State Source
+		public IState Source
 		{
 			get { return _source; }
 		}
@@ -29,7 +29,7 @@ namespace SecuritySystemDSL.SemanticModel
 			get { return _trigger; }
 		}
 
-		public State Target
+		public IState Target
 		{
 			get { return _target; }
 		}

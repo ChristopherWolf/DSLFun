@@ -1,5 +1,4 @@
 ﻿using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Xunit;
 
 namespace Common.UnitTests.TestingHelpers
@@ -7,15 +6,15 @@ namespace Common.UnitTests.TestingHelpers
 	public class AutoFakeItEasyDataAttribute : AutoDataAttribute
 	{
 		public AutoFakeItEasyDataAttribute()
-			: base((IFixture) new Fixture()
-								  .Customize(new AutoFakeItEasyCustomization()))
+			: base(new Fixture()
+						.CustomizeWithFakeItEasy())
 		{
 		}
 
-//		public AutoFakeItEasyDataAttribute(params ICustomization[] customizations)
-//			: base((IFixture) new Fixture()
-//				                  .CustomizeWithFakeItEasy(customizations))
-//		{
-//		}
+		public AutoFakeItEasyDataAttribute(params ICustomization[] customizations)
+			: base(new Fixture()
+				        .CustomizeWithFakeItEasy(customizations))
+		{
+		}
 	}
 }

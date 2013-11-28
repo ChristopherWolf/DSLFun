@@ -6,7 +6,6 @@ namespace SecuritySystemDSL.SemanticModel
 	{
 		readonly IStateMachine _stateMachine;
 		readonly ICommandChannel _commandChannel;
-		State _currentState;
 
 		public Controller(IStateMachine stateMachine, ICommandChannel commandChannel)
 		{
@@ -16,25 +15,34 @@ namespace SecuritySystemDSL.SemanticModel
 			_stateMachine = stateMachine;
 			_commandChannel = commandChannel;
 
-			_currentState = _stateMachine.StartingState;
+			CurrentState = _stateMachine.StartingState;
 		}
+
+		public IState CurrentState { get; private set; }
 
 		public void HandleEventCode(string eventCode)
 		{
-			if(_currentState.HasTransition(eventCode))
-				TransitionTo(_currentState.FindTargetState(eventCode));
-			else if(_stateMachine.IsResetEvent(eventCode))
+			if (eventCode == null) throw new ArgumentNullException("eventCode");
+
+			if (CurrentState.HasTransition(eventCode))
+			{
+				var newState = CurrentState.FindTargetState(eventCode);
+
+				TransitionTo(newState);
+			}
+			else if (_stateMachine.IsResetEvent(eventCode))
+			{
 				TransitionTo(_stateMachine.StartingState);
+			}
 
 			// Ignore unknown event codes
-
 		}
 
-		void TransitionTo(State target)
+		void TransitionTo(IState target)
 		{
-//			_currentState = target;
-//
-//			_currentState.ExecuteActions(_commandChannel);
+			CurrentState = target;
+
+			CurrentState.ExecuteActions(_commandChannel);
 		}
 	}
 }

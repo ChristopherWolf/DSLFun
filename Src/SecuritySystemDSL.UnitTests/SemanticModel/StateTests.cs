@@ -82,7 +82,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Assert
 			sut.Transitions.Should().HaveCount(1);
-			likeness.ShouldEqual(sut.Transitions.Single().Value);
+			likeness.ShouldEqual(sut.Transitions.Single());
 		}
 	}
 
