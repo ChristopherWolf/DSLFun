@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Common.UnitTests.TestingHelpers;
-using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
-using Ploeh.SemanticComparison.Fluent;
 using SecuritySystemDSL.SemanticModel;
 using Xunit.Extensions;
 
@@ -71,8 +66,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 			sut.AddResetEvent(resetEvent);
 
 			// Assert
-			sut.ResetEvents.Should().HaveCount(1);
-			sut.ResetEvents.Single().Should().Be(resetEvent);
+			sut.IsResetEvent(resetEvent.Code).Should().BeTrue();
 		}
 	}
 

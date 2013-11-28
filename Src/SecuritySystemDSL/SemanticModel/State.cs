@@ -24,8 +24,6 @@ namespace SecuritySystemDSL.SemanticModel
 
 		public IEnumerable<KeyValuePair<string, Transition>> Transitions { get { return _transitions.Repeat(); } }
 
-		public IEnumerable<Command> Actions { get { return _actions.Repeat(); } }
-
 		public void AddTransition(Event trigger, State targetState)
 		{
 			if (trigger == null) throw new ArgumentNullException("trigger");
@@ -61,10 +59,15 @@ namespace SecuritySystemDSL.SemanticModel
 		{
 			if (commandChannel == null) throw new ArgumentNullException("commandChannel");
 
-			foreach (var action in Actions)
+			foreach (var action in _actions)
 			{
 				commandChannel.Send(action.Code);
 			}
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 	}
 }

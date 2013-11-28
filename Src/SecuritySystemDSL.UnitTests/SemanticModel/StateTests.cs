@@ -39,7 +39,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "Transitions" && x.Name != "Actions");
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
 
 			// Assert
 			assertion.Verify(constructors);
@@ -50,10 +50,10 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenAddingTransitions
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldUseTheEventCodeAsAKey(IFixture fixture, Event trigger, State targetState)
+		public void ItShouldUseTheTriggersEventCode(IFixture fixture, Event trigger, State targetState)
 		{
 			// Arrange
-			var expectedKey = trigger.Code;
+			var expected = trigger.Code;
 
 			var sut = fixture.Create<State>();
 
@@ -61,8 +61,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 			sut.AddTransition(trigger, targetState);
 
 			// Assert
-			sut.Transitions.Should().HaveCount(1);
-			sut.Transitions.Single().Key.Should().Be(expectedKey);
+			sut.HasTransition(expected).Should().BeTrue();
 		}
 
 		[Theory, AutoFakeItEasyData]
@@ -155,14 +154,16 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		public void ItShouldAddThePassedInCommandAsAnAction(IFixture fixture, Command command)
 		{
 			// Arrange
+			var commandChannel = fixture.Create<ICommandChannel>();
+
 			var sut = fixture.Create<State>();
 
 			// Act
 			sut.AddAction(command);
+			sut.ExecuteActions(commandChannel);
 
 			// Assert
-			sut.Actions.Should().HaveCount(1);
-			sut.Actions.Single().Should().Be(command);
+			A.CallTo(() => commandChannel.Send(command.Code)).MustHaveHappened(Repeated.Exactly.Once);
 		}
 	}
 

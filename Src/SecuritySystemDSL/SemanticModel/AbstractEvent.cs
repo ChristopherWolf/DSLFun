@@ -25,5 +25,10 @@ namespace SecuritySystemDSL.SemanticModel
 		{
 			get { return _code; }
 		}
+
+		public override string ToString()
+		{
+			return string.Format("Name: {0}; Code: {1}", Name, Code);
+		}
 	}
 }

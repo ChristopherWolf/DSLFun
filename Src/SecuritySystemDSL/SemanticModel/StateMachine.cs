@@ -27,12 +27,7 @@ namespace SecuritySystemDSL.SemanticModel
 			_resetEvents = new List<Event>();
 		}
 
-		public State StartingState
-		{
-			get { return _startingState; }
-		}
-
-		public IEnumerable<Event> ResetEvents { get { return _resetEvents.Repeat(); } }
+		public State StartingState { get { return _startingState; } }
 
 		public void AddResetEvent(Event resetEvent)
 		{
