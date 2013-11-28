@@ -39,7 +39,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "Transitions");
 
 			// Assert
 			assertion.Verify(constructors);
