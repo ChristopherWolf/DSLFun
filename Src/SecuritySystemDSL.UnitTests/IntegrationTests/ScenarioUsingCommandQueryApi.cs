@@ -12,49 +12,81 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 	{
 		readonly IList<string> _eventCodeHistory;
 
+		public IEnumerable<string> EventCodeHistory { get { return _eventCodeHistory.Repeat(); } }
+
 		public HistoryRecordingCommandChannel()
 		{
 			_eventCodeHistory = new List<string>();
 		}
 
-		public IEnumerable<string> EventCodeHistory
-		{
-			get { return _eventCodeHistory.Repeat(); }
-		}
+		#region ICommandChannel Members
 
 		public void Send(string eventCode)
 		{
 			if (eventCode == null) throw new ArgumentNullException("eventCode");
 
-			var message = string.Format("Command channel received event code: {0}", eventCode);
+			string message = string.Format("Command channel received event code: {0}", eventCode);
 
 			Console.WriteLine(message);
 
 			_eventCodeHistory.Add(eventCode);
 		}
+
+		#endregion
 	}
 
 	public class ScenarioData
 	{
-		readonly HistoryRecordingCommandChannel _commandChannel;
-
-		readonly Event _doorOpened;
-		readonly Event _doorClosed;
-		readonly Event _drawerOpened;
-		readonly Event _lightOn;
-		readonly Event _panelClosed;
-
-		readonly Command _lockPanelCmd;
-		readonly Command _unlockPanelCmd;
-		readonly Command _lockDoorCmd;
-		readonly Command _unlockDoorCmd;
-
-		readonly State _idleState;
 		readonly State _activeState;
-		readonly State _waitingForLightState;
-		readonly State _waitingForDrawerState;
-		readonly State _unlockedPanelState;
+		readonly HistoryRecordingCommandChannel _commandChannel;
 		readonly Controller _controller;
+
+		readonly Event _doorClosed;
+		readonly Event _doorOpened;
+		readonly Event _drawerOpened;
+		readonly State _idleState;
+		readonly Event _lightOn;
+		readonly Command _lockDoorCmd;
+		readonly Command _lockPanelCmd;
+		readonly Event _panelClosed;
+		readonly Command _unlockDoorCmd;
+		readonly Command _unlockPanelCmd;
+
+		readonly State _unlockedPanelState;
+		readonly State _waitingForDrawerState;
+		readonly State _waitingForLightState;
+
+		public HistoryRecordingCommandChannel CommandChannel { get { return _commandChannel; } }
+
+		public Controller Controller { get { return _controller; } }
+
+		public Event DoorOpened { get { return _doorOpened; } }
+
+		public Event DoorClosed { get { return _doorClosed; } }
+
+		public Event DrawerOpened { get { return _drawerOpened; } }
+
+		public Event LightOn { get { return _lightOn; } }
+
+		public Event PanelClosed { get { return _panelClosed; } }
+
+		public Command LockPanelCmd { get { return _lockPanelCmd; } }
+
+		public Command UnlockPanelCmd { get { return _unlockPanelCmd; } }
+
+		public Command LockDoorCmd { get { return _lockDoorCmd; } }
+
+		public Command UnlockDoorCmd { get { return _unlockDoorCmd; } }
+
+		public State IdleState { get { return _idleState; } }
+
+		public State ActiveState { get { return _activeState; } }
+
+		public State WaitingForLightState { get { return _waitingForLightState; } }
+
+		public State WaitingForDrawerState { get { return _waitingForDrawerState; } }
+
+		public State UnlockedPanelState { get { return _unlockedPanelState; } }
 
 		public ScenarioData()
 		{
@@ -107,86 +139,6 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 
 			return new Controller(stateMachine, _commandChannel);
 		}
-
-		public HistoryRecordingCommandChannel CommandChannel
-		{
-			get { return _commandChannel; }
-		}
-
-		public Controller Controller
-		{
-			get { return _controller; }
-		}
-
-		public Event DoorOpened	
-		{
-			get { return _doorOpened; }
-		}
-
-		public Event DoorClosed
-		{
-			get { return _doorClosed; }
-		}
-
-		public Event DrawerOpened
-		{
-			get { return _drawerOpened; }
-		}
-
-		public Event LightOn
-		{
-			get { return _lightOn; }
-		}
-
-		public Event PanelClosed
-		{
-			get { return _panelClosed; }
-		}
-
-		public Command LockPanelCmd
-		{
-			get { return _lockPanelCmd; }
-		}
-
-		public Command UnlockPanelCmd
-		{
-			get { return _unlockPanelCmd; }
-		}
-
-		public Command LockDoorCmd
-		{
-			get { return _lockDoorCmd; }
-		}
-
-		public Command UnlockDoorCmd
-		{
-			get { return _unlockDoorCmd; }
-		}
-
-		public State IdleState
-		{
-			get { return _idleState; }
-		}
-
-		public State ActiveState
-		{
-			get { return _activeState; }
-		}
-
-		public State WaitingForLightState
-		{
-			get { return _waitingForLightState; }
-		}
-
-		public State WaitingForDrawerState
-		{
-			get { return _waitingForDrawerState; }
-		}
-
-		public State UnlockedPanelState
-		{
-			get { return _unlockedPanelState; }
-		}
 	}
 
 	public class ScenarioUsingCommandQueryApi
@@ -223,23 +175,39 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void UnlockPanelUsingRouteA()
 		{
 			// Arrange
-			var controller = _scenarioData.Controller;
-			var codes = GetCodesToUnlockPanelViaRouteA().ToList();
+			Controller controller = _scenarioData.Controller;
+			List<Event> codes = GetCodesToUnlockPanelViaRouteA().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
 			controller.CurrentState.Should().Be(_scenarioData.UnlockedPanelState);
+		}
+
+		[Fact]
+		public void CommandsforUnlockPanelStateUnlockPanelUsingRouteA()
+		{
+			// Arrange
+			Controller controller = _scenarioData.Controller;
+			List<Event> codes = GetCodesToUnlockPanelViaRouteA().ToList();
+
+			List<string> expected = new[] {_scenarioData.UnlockPanelCmd.Code, _scenarioData.LockDoorCmd.Code}.ToList();
+
+			// Act
+			codes.ForEach(x => controller.HandleEventCode(x.Code));
+
+			// Assert
+			_scenarioData.CommandChannel.EventCodeHistory.Should().Equal(expected);
 		}
 
 		[Fact]
 		public void UnlockPanelUsingRouteB()
 		{
 			// Arrange
-			var controller = _scenarioData.Controller;
-			
-			var codes = GetCodesToUnlockPanelViaRouteB().ToList();
+			Controller controller = _scenarioData.Controller;
+
+			List<Event> codes = GetCodesToUnlockPanelViaRouteB().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
@@ -249,12 +217,28 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		}
 
 		[Fact]
+		public void CommandsforUnlockPanelStateUnlockPanelUsingRouteB()
+		{
+			// Arrange
+			Controller controller = _scenarioData.Controller;
+			List<Event> codes = GetCodesToUnlockPanelViaRouteB().ToList();
+
+			List<string> expected = new[] {_scenarioData.UnlockPanelCmd.Code, _scenarioData.LockDoorCmd.Code}.ToList();
+
+			// Act
+			codes.ForEach(x => controller.HandleEventCode(x.Code));
+
+			// Assert
+			_scenarioData.CommandChannel.EventCodeHistory.Should().Equal(expected);
+		}
+
+		[Fact]
 		public void SendResetEvent()
 		{
 			// Arrange
-			var controller = _scenarioData.Controller;
-			
-			var codes = GetCodesForReset().ToList();
+			Controller controller = _scenarioData.Controller;
+
+			List<Event> codes = GetCodesForReset().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
@@ -267,9 +251,9 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void CommandsforIdleState()
 		{
 			// Arrange
-			var controller = _scenarioData.Controller;
+			Controller controller = _scenarioData.Controller;
 
-			var expected = new[] { _scenarioData.UnlockDoorCmd.Code, _scenarioData.LockPanelCmd.Code }.ToList();
+			List<string> expected = new[] {_scenarioData.UnlockDoorCmd.Code, _scenarioData.LockPanelCmd.Code}.ToList();
 
 			// Act
 			controller.HandleEventCode(_scenarioData.DoorClosed.Code);
