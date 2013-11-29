@@ -46,25 +46,34 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 			_semanticModel = semanticModel;
 		}
 
-		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteA()
+		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteA
 		{
-			yield return _semanticModel.DoorClosed;
-			yield return _semanticModel.LightOn;
-			yield return _semanticModel.DrawerOpened;
+			get
+			{
+				yield return _semanticModel.DoorClosed;
+				yield return _semanticModel.LightOn;
+				yield return _semanticModel.DrawerOpened;
+			}
 		}
 
-		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteB()
+		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteB
 		{
-			yield return _semanticModel.DoorClosed;
-			yield return _semanticModel.DrawerOpened;
-			yield return _semanticModel.LightOn;
+			get
+			{
+				yield return _semanticModel.DoorClosed;
+				yield return _semanticModel.DrawerOpened;
+				yield return _semanticModel.LightOn;
+			}
 		}
 
-		public IEnumerable<Event> EventSequenceWithReset()
+		public IEnumerable<Event> EventSequenceWithReset
 		{
-			yield return _semanticModel.DoorClosed;
-			yield return _semanticModel.LightOn;
-			yield return _semanticModel.DoorOpened;
+			get
+			{
+				yield return _semanticModel.DoorClosed;
+				yield return _semanticModel.LightOn;
+				yield return _semanticModel.DoorOpened;
+			}
 		}
 	}
 
@@ -76,7 +85,7 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void UnlockPanelViaRouteA(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			var codes = sequences.EventSequenceToUnlockPanelViaRouteA().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteA.ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
@@ -89,7 +98,7 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void CheckCommandCodesWhenUnlockingPanelViaRouteA(Controller controller, SecretPanelSemanticModel semanticModel, HistoryRecordingCommandChannel commandChannel, EventCodeSequences sequences)
 		{
 			// Arrange
-			var codes = sequences.EventSequenceToUnlockPanelViaRouteA().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteA.ToList();
 
 			var expected = new[] { semanticModel.UnlockPanelCmd.Code, semanticModel.LockDoorCmd.Code }.ToList();
 
@@ -104,7 +113,7 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void UnlockPanelViaRouteB(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			var codes = sequences.EventSequenceToUnlockPanelViaRouteB().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteB.ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
@@ -117,7 +126,7 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void CheckCommandCodesWhenUnlockingPanelViaRouteB(Controller controller, SecretPanelSemanticModel semanticModel, HistoryRecordingCommandChannel commandChannel, EventCodeSequences sequences)
 		{
 			// Arrange
-			var codes = sequences.EventSequenceToUnlockPanelViaRouteB().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteB.ToList();
 
 			var expected = new[] { semanticModel.UnlockPanelCmd.Code, semanticModel.LockDoorCmd.Code }.ToList();
 
@@ -133,7 +142,7 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public void SendResetEventAfterMovingToANewState(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			var codes = sequences.EventSequenceWithReset().ToList();
+			var codes = sequences.EventSequenceWithReset.ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
