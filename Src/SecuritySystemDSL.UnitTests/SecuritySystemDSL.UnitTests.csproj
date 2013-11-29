@@ -82,7 +82,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationTests\HistoryRecordingCommandChannel.cs" />
     <Compile Include="IntegrationTests\ScenarioUsingCommandQueryApi.cs" />
+    <Compile Include="IntegrationTests\SecretPanelStateMachineData.cs" />
     <Compile Include="SemanticModel\CommandTests.cs" />
     <Compile Include="SemanticModel\ControllerTests.cs" />
     <Compile Include="SemanticModel\EventTests.cs" />

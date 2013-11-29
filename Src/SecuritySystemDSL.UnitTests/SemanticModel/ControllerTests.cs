@@ -18,20 +18,21 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 	{
 		public void Customize(IFixture fixture)
 		{
-			var eventCode = fixture.Freeze<string>();
+			var eventCodes = fixture.Freeze<EventCodes>();
 
 			var startState = fixture.Create<IState>();
 			A.CallTo(() => startState.ToString()).Returns("Starting state");
 
-			A.CallTo(() => startState.HasTransition(eventCode)).Returns(true);
+			A.CallTo(() => startState.HasTransition(eventCodes.NewStateEventCode)).Returns(true);
 
 			var newState = fixture.Freeze<IState>();
 			A.CallTo(() => newState.ToString()).Returns("New state");
 
-			A.CallTo(() => startState.FindTargetState(eventCode)).Returns(newState);
+			A.CallTo(() => startState.FindTargetState(eventCodes.NewStateEventCode)).Returns(newState);
 
 			var stateMachine = fixture.Freeze<IStateMachine>();
 			A.CallTo(() => stateMachine.StartingState).Returns(startState);
+			A.CallTo(() => stateMachine.IsResetEvent(eventCodes.ResetEventCode)).Returns(true);
 		}
 	}
 
@@ -41,6 +42,29 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 			: base(new StartingStateHasTransitionCustomization())
 		{
 		}
+	}
+
+	#endregion
+
+	#region Test Doubles
+
+	public class EventCodes
+	{
+		readonly string _newStateEventCode;
+		readonly string _resetEventCode;
+
+		public EventCodes(string newStateEventCode, string resetEventCode)
+		{
+			if (newStateEventCode == null) throw new ArgumentNullException("newStateEventCode");
+			if (resetEventCode == null) throw new ArgumentNullException("resetEventCode");
+
+			_newStateEventCode = newStateEventCode;
+			_resetEventCode = resetEventCode;
+		}
+
+		public string NewStateEventCode { get { return _newStateEventCode; } }
+
+		public string ResetEventCode { get { return _resetEventCode; } }
 	}
 
 	#endregion
@@ -79,24 +103,24 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 		public class AndTheCurrentStateHasATransitonForThatEventCode
 		{
 			[Theory, StartingStateHasTransition]
-			public void ItShouldTransitionToTheNewState(IStateMachine stateMachine, IState newState, string eventCode, Controller sut)
+			public void ItShouldTransitionToTheNewState(IStateMachine stateMachine, IState newState, EventCodes eventCodes, Controller sut)
 			{
 				// Arrange
 
 				// Act
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.NewStateEventCode);
 
 				// Assert
 				sut.CurrentState.Should().BeSameAs(newState);
 			}
 
 			[Theory, StartingStateHasTransition]
-			public void ItShouldExecuteTheCommandsOnTheNewState(IState newState, [Frozen]ICommandChannel commandChannel, string eventCode, Controller sut)
+			public void ItShouldExecuteTheCommandsOnTheNewState(IState newState, [Frozen]ICommandChannel commandChannel, EventCodes eventCodes, Controller sut)
 			{
 				// Arrange
 
 				// Act
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.NewStateEventCode);
 
 				// Assert
 				A.CallTo(() => newState.ExecuteActions(commandChannel)).MustHaveHappened(Repeated.Exactly.Once);
@@ -105,35 +129,31 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 
 		public class AndTheEventCodeIsARestEventCode
 		{
-			[Theory, StartingStateHasTransitionAttribute]
-			public void ItShouldTransitionToTheStartState(IStateMachine stateMachine, string eventCode, Controller sut)
+			[Theory, StartingStateHasTransition]
+			public void ItShouldTransitionToTheStartState(IStateMachine stateMachine, EventCodes eventCodes, Controller sut)
 			{
 				// Arrange
-				A.CallTo(() => stateMachine.IsResetEvent(eventCode)).Returns(true);
-
 				var startingState = stateMachine.StartingState;
 
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.NewStateEventCode);
 
 				// Act
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.ResetEventCode);
 
 				// Assert
 				sut.CurrentState.Should().BeSameAs(startingState);
 			}
 
-			[Theory, StartingStateHasTransitionAttribute]
-			public void ItShouldExecuteTheCommandsOnTheStartState(IStateMachine stateMachine, [Frozen]ICommandChannel commandChannel, string eventCode, Controller sut)
+			[Theory, StartingStateHasTransition]
+			public void ItShouldExecuteTheCommandsOnTheStartState(IStateMachine stateMachine, [Frozen]ICommandChannel commandChannel, EventCodes eventCodes, Controller sut)
 			{
 				// Arrange
-				A.CallTo(() => stateMachine.IsResetEvent(eventCode)).Returns(true);
-
 				var startingState = stateMachine.StartingState;
 
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.NewStateEventCode);
 
 				// Act
-				sut.HandleEventCode(eventCode);
+				sut.HandleEventCode(eventCodes.ResetEventCode);
 
 				// Assert
 				A.CallTo(() => startingState.ExecuteActions(commandChannel)).MustHaveHappened(Repeated.Exactly.Once);
