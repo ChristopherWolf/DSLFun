@@ -8,7 +8,9 @@ namespace SecuritySystemDSL.SemanticModel
 	{
 		void AddTransition(Event trigger, IState targetState);
 		bool HasTransition(string eventCode);
+
 		IState FindTargetState(string eventCode);
+
 		void AddAction(Command command);
 		void ExecuteActions(ICommandChannel commandChannel);
 	}

@@ -35,7 +35,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "ResetEvents");
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
 
 			// Assert
 			assertion.Verify(constructors);
@@ -46,6 +46,7 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 		public void ItShouldImplementTheExpectedRoles(IFixture fixture)
 		{
 			// Arrange
+
 			// Act
 			var sut = fixture.Create<StateMachine>();
 
@@ -57,10 +58,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 	public class WhenAddingResetEvents
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldAddThePassedInEventAsAResetEvent(IFixture fixture, Event resetEvent)
+		public void ItShouldAddThePassedInEventAsAResetEvent(Event resetEvent, StateMachine sut)
 		{
 			// Arrange
-			var sut = fixture.Create<StateMachine>();
 
 			// Act
 			sut.AddResetEvent(resetEvent);
@@ -73,11 +73,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 	public class WhenCheckingIfAnEventIsAResetEvent
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTrueIfTheEventIsAResetEvent(IFixture fixture, Event @event)
+		public void ItShouldReturnTrueIfTheEventIsAResetEvent(Event @event, StateMachine sut)
 		{
 			// Arrange
-			var sut = fixture.Create<StateMachine>();
-
 			sut.AddResetEvent(@event);
 
 			// Act
@@ -88,10 +86,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateMachineTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnFalseIfTheEventIsNotAResetEvent(IFixture fixture, string eventCode)
+		public void ItShouldReturnFalseIfTheEventIsNotAResetEvent(string eventCode, StateMachine sut)
 		{
 			// Arrange
-			var sut = fixture.Create<StateMachine>();
 
 			// Act
 			var result = sut.IsResetEvent(eventCode);

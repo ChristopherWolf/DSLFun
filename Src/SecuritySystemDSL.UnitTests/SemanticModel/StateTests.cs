@@ -50,12 +50,10 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenAddingTransitions
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldUseTheTriggersEventCode(IFixture fixture, Event trigger, State targetState)
+		public void ItShouldUseTheTriggersEventCode(Event trigger, IState targetState, State sut)
 		{
 			// Arrange
 			var expected = trigger.Code;
-
-			var sut = fixture.Create<State>();
 
 			// Act
 			sut.AddTransition(trigger, targetState);
@@ -65,11 +63,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldAddTheExpectedTransition(IFixture fixture, Event trigger, State targetState)
+		public void ItShouldAddTheExpectedTransition(Event trigger, IState targetState, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
-
 			var likeness = sut.AsSource()
 			                  .OfLikeness<Transition>()
 							  .OmitAutoComparison()
@@ -89,11 +85,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenCheckingIfStateContainsATransition
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTrueIfTheStateContainsTheTransition(IFixture fixture, Event trigger, State targetState)
+		public void ItShouldReturnTrueIfTheStateContainsTheTransition(Event trigger, IState targetState, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
-
 			sut.AddTransition(trigger, targetState);
 
 			// Act
@@ -104,10 +98,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnFalseIfTheStateDoesNotContainTheTransition(IFixture fixture, string eventCode)
+		public void ItShouldReturnFalseIfTheStateDoesNotContainTheTransition(string eventCode, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
 
 			// Act
 			var result = sut.HasTransition(eventCode);
@@ -120,11 +113,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenGettingTheTargetStateForAnEventCode
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheExpectedTargetStateIfTheEventCodeIsUsed(IFixture fixture, Event trigger, State targetState)
+		public void ItShouldReturnTheExpectedTargetStateIfTheEventCodeIsUsed(Event trigger, IState targetState, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
-
 			sut.AddTransition(trigger, targetState);
 
 			// Act
@@ -135,10 +126,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldThrowAKeyNotFoundExceptionIfTheEventCodeIsNotUsed(IFixture fixture, string eventCode)
+		public void ItShouldThrowAKeyNotFoundExceptionIfTheEventCodeIsNotUsed(string eventCode, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
 
 			// Act
 			Action action = () => sut.FindTargetState(eventCode);
@@ -151,15 +141,13 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenAddingActions
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldAddThePassedInCommandAsAnAction(IFixture fixture, Command command)
+		public void ItShouldAddThePassedInCommandAsAnAction(ICommandChannel commandChannel, Command command, State sut)
 		{
 			// Arrange
-			var commandChannel = fixture.Create<ICommandChannel>();
-
-			var sut = fixture.Create<State>();
 
 			// Act
 			sut.AddAction(command);
+
 			sut.ExecuteActions(commandChannel);
 
 			// Assert
@@ -170,11 +158,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.StateTests
 	public class WhenExecutingActions
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldCallTheCommandChannelsSendMethodWithTheCorrectCommandCodes(IFixture fixture, List<Command> commands, [Frozen]ICommandChannel commandChannel)
+		public void ItShouldCallTheCommandChannelsSendMethodWithTheCorrectCommandCodes(List<Command> commands, [Frozen]ICommandChannel commandChannel, State sut)
 		{
 			// Arrange
-			var sut = fixture.Create<State>();
-
 			commands.ForEach(sut.AddAction);
 
 			var expected = commands.Select(x => x.Code);

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Common.UnitTests.TestingHelpers;
-using FakeItEasy;
-using FluentAssertions;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
-using Ploeh.SemanticComparison.Fluent;
 using SecuritySystemDSL.SemanticModel;
 using Xunit.Extensions;
 
@@ -44,21 +39,6 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.TransitionTests
 			// Assert
 			assertion.Verify(constructors);
 			assertion.Verify(readOnlyProperties);
-		}
-
-		[Theory, AutoFakeItEasyData]
-		public void TheEventCodeShouldBeCorrect(IFixture fixture, [Frozen]Event trigger)
-		{
-			// Arrange
-			var expected = trigger.Code;
-
-			var sut = fixture.Create<Transition>();
-
-			// Act
-			var result = sut.EventCode;
-
-			// Assert
-			result.Should().Be(expected);
 		}
 	}
 }

@@ -61,12 +61,10 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void CurrentStateShouldBeInitializedToStateMachinesStartingState(IFixture fixture, [Frozen] IStateMachine stateMachine)
+		public void CurrentStateShouldBeInitializedToStateMachinesStartingState([Frozen] IStateMachine stateMachine, Controller sut)
 		{
 			// Arrange
 			var expected = stateMachine.StartingState;
-
-			var sut = fixture.Create<Controller>();
 
 			// Act
 			var result = sut.CurrentState;
@@ -81,10 +79,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 		public class AndTheCurrentStateHasATransitonForThatEventCode
 		{
 			[Theory, StartingStateHasTransition]
-			public void ItShouldTransitionToTheNewState(IFixture fixture, IStateMachine stateMachine, IState newState, string eventCode)
+			public void ItShouldTransitionToTheNewState(IStateMachine stateMachine, IState newState, string eventCode, Controller sut)
 			{
 				// Arrange
-				var sut = fixture.Create<Controller>();
 
 				// Act
 				sut.HandleEventCode(eventCode);
@@ -94,10 +91,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 			}
 
 			[Theory, StartingStateHasTransition]
-			public void ItShouldExecuteTheCommandsOnTheNewState(IFixture fixture, IState newState, [Frozen]ICommandChannel commandChannel, string eventCode)
+			public void ItShouldExecuteTheCommandsOnTheNewState(IState newState, [Frozen]ICommandChannel commandChannel, string eventCode, Controller sut)
 			{
 				// Arrange
-				var sut = fixture.Create<Controller>();
 
 				// Act
 				sut.HandleEventCode(eventCode);
@@ -110,14 +106,12 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 		public class AndTheEventCodeIsARestEventCode
 		{
 			[Theory, StartingStateHasTransitionAttribute]
-			public void ItShouldTransitionToTheStartState(IFixture fixture, IStateMachine stateMachine, string eventCode)
+			public void ItShouldTransitionToTheStartState(IStateMachine stateMachine, string eventCode, Controller sut)
 			{
 				// Arrange
 				A.CallTo(() => stateMachine.IsResetEvent(eventCode)).Returns(true);
 
 				var startingState = stateMachine.StartingState;
-
-				var sut = fixture.Create<Controller>();
 
 				sut.HandleEventCode(eventCode);
 
@@ -129,14 +123,12 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 			}
 
 			[Theory, StartingStateHasTransitionAttribute]
-			public void ItShouldExecuteTheCommandsOnTheStartState(IFixture fixture, IStateMachine stateMachine, [Frozen]ICommandChannel commandChannel, string eventCode)
+			public void ItShouldExecuteTheCommandsOnTheStartState(IStateMachine stateMachine, [Frozen]ICommandChannel commandChannel, string eventCode, Controller sut)
 			{
 				// Arrange
 				A.CallTo(() => stateMachine.IsResetEvent(eventCode)).Returns(true);
 
 				var startingState = stateMachine.StartingState;
-
-				var sut = fixture.Create<Controller>();
 
 				sut.HandleEventCode(eventCode);
 
@@ -151,11 +143,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 		public class AndTheEventCodeIsNotRecognized
 		{
 			[Theory, AutoFakeItEasyData]
-			public void ItShouldNotChangeTheCurrentState(IFixture fixture,  string eventCode)
+			public void ItShouldNotChangeTheCurrentState(string eventCode, Controller sut)
 			{
 				// Arrange
-				var sut = fixture.Create<Controller>();
-
 				var expected = sut.CurrentState;
 
 				// Act
@@ -166,11 +156,9 @@ namespace SecuritySystemDSL.UnitTests.SemanticModel.ControllerTests
 			}
 
 			[Theory, AutoFakeItEasyData]
-			public void ItShouldNotExecuteTheCommandsOnTheCurrentState(IFixture fixture, string eventCode)
+			public void ItShouldNotExecuteTheCommandsOnTheCurrentState(string eventCode, Controller sut)
 			{
 				// Arrange
-				var sut = fixture.Create<Controller>();
-
 				var currentState = sut.CurrentState;
 
 				// Act

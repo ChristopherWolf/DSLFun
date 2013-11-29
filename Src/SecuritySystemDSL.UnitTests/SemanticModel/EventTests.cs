@@ -4,7 +4,6 @@ using Common.UnitTests.TestingHelpers;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using SecuritySystemDSL.SemanticModel;
-using Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace

@@ -33,10 +33,5 @@ namespace SecuritySystemDSL.SemanticModel
 		{
 			get { return _target; }
 		}
-
-		public string EventCode
-		{
-			get { return Trigger.Code; }
-		}
 	}
 }
