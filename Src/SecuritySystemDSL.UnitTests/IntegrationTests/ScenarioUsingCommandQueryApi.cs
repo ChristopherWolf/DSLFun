@@ -1,131 +1,159 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
+using Ploeh.AutoFixture;
 using SecuritySystemDSL.SemanticModel;
-using Xunit;
+using Xunit.Extensions;
 
 namespace SecuritySystemDSL.UnitTests.IntegrationTests
 {
+	#region Customizations
+
+	internal class ScenarioUsingCommandQueryApiCustomization : ICustomization
+	{
+		public void Customize(IFixture fixture)
+		{
+			var commandChannel = fixture.Freeze<HistoryRecordingCommandChannel>();
+
+			var model = fixture.Freeze<SecretPanelSemanticModel>();
+
+			fixture.Register(() => new Controller(model.CreateStateMachine(), commandChannel));
+		}
+	}
+
+	public class ScenarioUsingCommandQueryApiAttribute : AutoFakeItEasyDataAttribute
+	{
+		public ScenarioUsingCommandQueryApiAttribute()
+			: base(new ScenarioUsingCommandQueryApiCustomization())
+		{
+		}
+	}
+
+	#endregion
+
+	#region Test Helpers
+
+	public class EventCodeSequences
+	{
+		readonly SecretPanelSemanticModel _semanticModel;
+
+		public EventCodeSequences(SecretPanelSemanticModel semanticModel)
+		{
+			if (semanticModel == null) throw new ArgumentNullException("semanticModel");
+
+			_semanticModel = semanticModel;
+		}
+
+		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteA()
+		{
+			yield return _semanticModel.DoorClosed;
+			yield return _semanticModel.LightOn;
+			yield return _semanticModel.DrawerOpened;
+		}
+
+		public IEnumerable<Event> EventSequenceToUnlockPanelViaRouteB()
+		{
+			yield return _semanticModel.DoorClosed;
+			yield return _semanticModel.DrawerOpened;
+			yield return _semanticModel.LightOn;
+		}
+
+		public IEnumerable<Event> EventSequenceWithReset()
+		{
+			yield return _semanticModel.DoorClosed;
+			yield return _semanticModel.LightOn;
+			yield return _semanticModel.DoorOpened;
+		}
+	}
+
+	#endregion
+
 	public class ScenarioUsingCommandQueryApi
 	{
-		readonly SecretPanelStateMachineData _secretPanelStateMachineData;
-
-		public ScenarioUsingCommandQueryApi()
-		{
-			_secretPanelStateMachineData = new SecretPanelStateMachineData();
-		}
-
-		IEnumerable<Event> GetCodesToUnlockPanelViaRouteA()
-		{
-			yield return _secretPanelStateMachineData.DoorClosed;
-			yield return _secretPanelStateMachineData.LightOn;
-			yield return _secretPanelStateMachineData.DrawerOpened;
-		}
-
-		IEnumerable<Event> GetCodesToUnlockPanelViaRouteB()
-		{
-			yield return _secretPanelStateMachineData.DoorClosed;
-			yield return _secretPanelStateMachineData.DrawerOpened;
-			yield return _secretPanelStateMachineData.LightOn;
-		}
-
-		IEnumerable<Event> GetCodesForReset()
-		{
-			yield return _secretPanelStateMachineData.DoorClosed;
-			yield return _secretPanelStateMachineData.LightOn;
-			yield return _secretPanelStateMachineData.DoorOpened;
-		}
-
-		[Fact]
-		public void UnlockPanelUsingRouteA()
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void UnlockPanelViaRouteA(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-			List<Event> codes = GetCodesToUnlockPanelViaRouteA().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteA().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
-			controller.CurrentState.Should().Be(_secretPanelStateMachineData.UnlockedPanelState);
+			controller.CurrentState.Should().Be(semanticModel.UnlockedPanelState);
 		}
 
-		[Fact]
-		public void CommandsforUnlockPanelStateUnlockPanelUsingRouteA()
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void CheckCommandCodesWhenUnlockingPanelViaRouteA(Controller controller, SecretPanelSemanticModel semanticModel, HistoryRecordingCommandChannel commandChannel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-			List<Event> codes = GetCodesToUnlockPanelViaRouteA().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteA().ToList();
 
-			List<string> expected = new[] {_secretPanelStateMachineData.UnlockPanelCmd.Code, _secretPanelStateMachineData.LockDoorCmd.Code}.ToList();
+			var expected = new[] { semanticModel.UnlockPanelCmd.Code, semanticModel.LockDoorCmd.Code }.ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
-			_secretPanelStateMachineData.CommandChannel.EventCodeHistory.Should().Equal(expected);
+			commandChannel.EventCodeHistory.Should().Equal(expected);
 		}
 
-		[Fact]
-		public void UnlockPanelUsingRouteB()
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void UnlockPanelViaRouteB(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-
-			List<Event> codes = GetCodesToUnlockPanelViaRouteB().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteB().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
-			controller.CurrentState.Should().Be(_secretPanelStateMachineData.UnlockedPanelState);
+			controller.CurrentState.Should().Be(semanticModel.UnlockedPanelState);
 		}
 
-		[Fact]
-		public void CommandsforUnlockPanelStateUnlockPanelUsingRouteB()
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void CheckCommandCodesWhenUnlockingPanelViaRouteB(Controller controller, SecretPanelSemanticModel semanticModel, HistoryRecordingCommandChannel commandChannel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-			List<Event> codes = GetCodesToUnlockPanelViaRouteB().ToList();
+			var codes = sequences.EventSequenceToUnlockPanelViaRouteB().ToList();
 
-			List<string> expected = new[] {_secretPanelStateMachineData.UnlockPanelCmd.Code, _secretPanelStateMachineData.LockDoorCmd.Code}.ToList();
+			var expected = new[] { semanticModel.UnlockPanelCmd.Code, semanticModel.LockDoorCmd.Code }.ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
-			_secretPanelStateMachineData.CommandChannel.EventCodeHistory.Should().Equal(expected);
+			commandChannel.EventCodeHistory.Should().Equal(expected);
 		}
 
-		[Fact]
-		public void SendResetEvent()
+
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void SendResetEventAfterMovingToANewState(Controller controller, SecretPanelSemanticModel semanticModel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-
-			List<Event> codes = GetCodesForReset().ToList();
+			var codes = sequences.EventSequenceWithReset().ToList();
 
 			// Act
 			codes.ForEach(x => controller.HandleEventCode(x.Code));
 
 			// Assert
-			controller.CurrentState.Should().Be(_secretPanelStateMachineData.IdleState);
+			controller.CurrentState.Should().Be(semanticModel.IdleState);
 		}
 
-		[Fact]
-		public void CommandsforIdleState()
+		[Theory, ScenarioUsingCommandQueryApi]
+		public void CheckCommandCodesWhenResettingToInitialState(Controller controller, SecretPanelSemanticModel semanticModel, HistoryRecordingCommandChannel commandChannel, EventCodeSequences sequences)
 		{
 			// Arrange
-			Controller controller = _secretPanelStateMachineData.Controller;
-
-			List<string> expected = new[] {_secretPanelStateMachineData.UnlockDoorCmd.Code, _secretPanelStateMachineData.LockPanelCmd.Code}.ToList();
+			var expected = new[] { semanticModel.UnlockDoorCmd.Code, semanticModel.LockPanelCmd.Code }.ToList();
 
 			// Act
-			controller.HandleEventCode(_secretPanelStateMachineData.DoorClosed.Code);
-			controller.HandleEventCode(_secretPanelStateMachineData.DoorOpened.Code);
+			controller.HandleEventCode(semanticModel.DoorClosed.Code);
+			controller.HandleEventCode(semanticModel.DoorOpened.Code);
 
 			// Assert
-			_secretPanelStateMachineData.CommandChannel.EventCodeHistory.Should().Equal(expected);
+			commandChannel.EventCodeHistory.Should().Equal(expected);
 		}
 	}
 }

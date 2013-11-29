@@ -2,11 +2,8 @@
 
 namespace SecuritySystemDSL.UnitTests.IntegrationTests
 {
-	public class SecretPanelStateMachineData
+	public class SecretPanelSemanticModel
 	{
-		readonly HistoryRecordingCommandChannel _commandChannel;
-		readonly Controller _controller;
-
 		readonly Event _doorClosed;
 		readonly Event _doorOpened;
 		readonly Event _lightOn;
@@ -23,11 +20,6 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		readonly State _waitingForLightState;
 		readonly State _waitingForDrawerState;
 		readonly State _unlockedPanelState;
-
-
-		public HistoryRecordingCommandChannel CommandChannel { get { return _commandChannel; } }
-
-		public Controller Controller { get { return _controller; } }
 
 
 		public Event DoorClosed { get { return _doorClosed; } }
@@ -61,10 +53,8 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 		public State UnlockedPanelState { get { return _unlockedPanelState; } }
 
 
-		public SecretPanelStateMachineData()
+		public SecretPanelSemanticModel()
 		{
-			_commandChannel = new HistoryRecordingCommandChannel();
-
 			_doorOpened = new Event("DoorOpened", "D1OP");
 			_doorClosed = new Event("DoorClosed", "D1CL");
 			_drawerOpened = new Event("DrawerOpened", "D2OP");
@@ -83,8 +73,6 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 			_unlockedPanelState = new State("UnlockedPanel");
 
 			SetupTransitions();
-
-			_controller = CreateController();
 		}
 
 		void SetupTransitions()
@@ -105,12 +93,12 @@ namespace SecuritySystemDSL.UnitTests.IntegrationTests
 			_unlockedPanelState.AddAction(_lockDoorCmd);
 		}
 
-		Controller CreateController()
+		public IStateMachine CreateStateMachine()
 		{
 			var stateMachine = new StateMachine(_idleState);
 			stateMachine.AddResetEvent(_doorOpened);
 
-			return new Controller(stateMachine, _commandChannel);
+			return stateMachine;
 		}
 	}
 }
