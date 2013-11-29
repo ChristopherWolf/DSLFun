@@ -7,7 +7,7 @@ using Ploeh.AutoFixture;
 using SecuritySystemDSL.SemanticModel;
 using Xunit.Extensions;
 
-namespace SecuritySystemDSL.UnitTests.IntegrationTests
+namespace SecuritySystemDSL.UnitTests.IntegrationTests.CommandQueryApi
 {
 	#region Customizations
 

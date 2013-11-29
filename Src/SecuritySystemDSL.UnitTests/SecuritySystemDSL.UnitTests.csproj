@@ -83,8 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationTests\HistoryRecordingCommandChannel.cs" />
-    <Compile Include="IntegrationTests\ScenarioUsingCommandQueryApi.cs" />
-    <Compile Include="IntegrationTests\SecretPanelSemanticModel.cs" />
+    <Compile Include="IntegrationTests\CommandQueryApi\ScenarioUsingCommandQueryApi.cs" />
+    <Compile Include="IntegrationTests\CommandQueryApi\SecretPanelSemanticModel.cs" />
     <Compile Include="SemanticModel\CommandTests.cs" />
     <Compile Include="SemanticModel\ControllerTests.cs" />
     <Compile Include="SemanticModel\EventTests.cs" />
@@ -111,6 +111,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

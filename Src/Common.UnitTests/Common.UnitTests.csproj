@@ -82,6 +82,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Specifications\AndSpecificationTests.cs" />
+    <Compile Include="Specifications\CommonCustomizations.cs" />
+    <Compile Include="Specifications\NotSpecificationTests.cs" />
+    <Compile Include="Specifications\OrSpecificationTests.cs" />
+    <Compile Include="Specifications\TestType.cs" />
     <Compile Include="TestingHelpers\AutoFakeItEasyDataAttribute.cs" />
     <Compile Include="EnumerableExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +102,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

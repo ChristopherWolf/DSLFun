@@ -1,6 +1,6 @@
 ﻿using SecuritySystemDSL.SemanticModel;
 
-namespace SecuritySystemDSL.UnitTests.IntegrationTests
+namespace SecuritySystemDSL.UnitTests.IntegrationTests.CommandQueryApi
 {
 	public class SecretPanelSemanticModel
 	{
