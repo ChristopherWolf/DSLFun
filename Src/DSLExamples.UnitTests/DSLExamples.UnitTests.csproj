@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RecurringEvents\SemanticModel\MonthTests.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\HistoryRecordingCommandChannel.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\ScenarioUsingCommandQueryApi.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\SecretPanelSemanticModel.cs" />
