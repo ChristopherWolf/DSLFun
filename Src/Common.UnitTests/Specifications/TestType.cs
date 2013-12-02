@@ -1,4 +1,6 @@
-﻿namespace Common.UnitTests.Specifications
+﻿using System;
+
+namespace Common.UnitTests.Specifications
 {
 	public class TestType
 	{
