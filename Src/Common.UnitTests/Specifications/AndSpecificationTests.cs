@@ -1,4 +1,5 @@
-﻿using Common.Specifications;
+﻿using System.Collections.Generic;
+using Common.Specifications;
 using Common.UnitTests.Specifications;
 using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
@@ -12,15 +13,35 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldBeASpecification(IFixture fixture)
+		public void ItShouldBeASpecification(AndSpecification<TestType> sut)
+		{
+			sut.Should().BeAssignableTo<ISpecification<TestType>>();
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithArray(ISpecification<TestType>[] array)
 		{
 			// Arrange
+			var sut = new AndSpecification<TestType>(array);
 
 			// Act
-			var sut = fixture.Create<AndSpecification<TestType>>();
+			var result = sut.InnerSpecifications;
 
 			// Assert
-			sut.Should().BeAssignableTo<ISpecification<TestType>>();
+			result.Should().Equal(array);
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithEnumerable(IEnumerable<ISpecification<TestType>> specifications)
+		{
+			// Arrange
+			var sut = new AndSpecification<TestType>(specifications);
+
+			// Act
+			var result = sut.InnerSpecifications;
+
+			// Assert
+			result.Should().Equal(specifications);
 		}
 	}
 
@@ -40,7 +61,7 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 		}
 
 		[Theory, AllInnerSpecificationsFail]
-		public void ItShouldReturnFalseIfAllInnerSpecificationsAreNotSatisfied(IFixture fixture, TestType item)
+		public void ItShouldReturnFalseIfNoInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
 		{
 			// Arrange
 			var sut = fixture.Create<AndSpecification<TestType>>();
@@ -63,6 +84,6 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 
 			// Assert
 			result.Should().BeFalse();
-		} 
+		}
 	}
 }

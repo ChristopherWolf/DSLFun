@@ -6,8 +6,12 @@ using System.Collections.Generic;
 
 namespace Common.UnitTests.Specifications
 {
-	internal class AllInnerSpecificationsPassCustomization : ICustomization
+	internal abstract class BaseSpecificationsPassCustomization : ICustomization
 	{
+		protected abstract bool ResultForFirstSpecification { get; }
+		protected abstract bool ResultForSecondSpecification { get; }
+		protected abstract bool ResultForThirdSpecification { get; }
+
 		public void Customize(IFixture fixture)
 		{
 			var item = fixture.Freeze<TestType>();
@@ -16,15 +20,24 @@ namespace Common.UnitTests.Specifications
 			var second = fixture.Create<ISpecification<TestType>>();
 			var third = fixture.Create<ISpecification<TestType>>();
 
-			A.CallTo(() => first.IsSatisfiedBy(item)).Returns(true);
-			A.CallTo(() => second.IsSatisfiedBy(item)).Returns(true);
-			A.CallTo(() => third.IsSatisfiedBy(item)).Returns(true);
+			A.CallTo(() => first.IsSatisfiedBy(item)).Returns(ResultForFirstSpecification);
+			A.CallTo(() => second.IsSatisfiedBy(item)).Returns(ResultForSecondSpecification);
+			A.CallTo(() => third.IsSatisfiedBy(item)).Returns(ResultForThirdSpecification);
 
-			var array = new[] {first, second, third};
+			var array = new[] { first, second, third };
 
 			fixture.Register<IEnumerable<ISpecification<TestType>>>(() => array);
 			fixture.Register<ISpecification<TestType>[]>(() => array);
 		}
+	}
+
+	internal class AllInnerSpecificationsPassCustomization : BaseSpecificationsPassCustomization
+	{
+		protected override bool ResultForFirstSpecification { get { return true; } }
+
+		protected override bool ResultForSecondSpecification { get { return true; } }
+
+		protected override bool ResultForThirdSpecification { get { return true; } }
 	}
 
 	public class AllInnerSpecificationsPassAttribute : AutoFakeItEasyDataAttribute
@@ -35,25 +48,13 @@ namespace Common.UnitTests.Specifications
 		}
 	}
 
-	internal class AllInnerSpecificationsFailCustomization : ICustomization
+	internal class AllInnerSpecificationsFailCustomization : BaseSpecificationsPassCustomization
 	{
-		public void Customize(IFixture fixture)
-		{
-			var item = fixture.Freeze<TestType>();
+		protected override bool ResultForFirstSpecification { get { return false; } }
 
-			var first = fixture.Create<ISpecification<TestType>>();
-			var second = fixture.Create<ISpecification<TestType>>();
-			var third = fixture.Create<ISpecification<TestType>>();
+		protected override bool ResultForSecondSpecification { get { return false; } }
 
-			A.CallTo(() => first.IsSatisfiedBy(item)).Returns(false);
-			A.CallTo(() => second.IsSatisfiedBy(item)).Returns(false);
-			A.CallTo(() => third.IsSatisfiedBy(item)).Returns(false);
-
-			var array = new[] { first, second, third };
-
-			fixture.Register<IEnumerable<ISpecification<TestType>>>(() => array);
-			fixture.Register<ISpecification<TestType>[]>(() => array);
-		}
+		protected override bool ResultForThirdSpecification { get { return false; } }
 	}
 
 	public class AllInnerSpecificationsFailAttribute : AutoFakeItEasyDataAttribute
@@ -64,25 +65,13 @@ namespace Common.UnitTests.Specifications
 		}
 	}
 
-	internal class SpecificationsAreMixedCustomization : ICustomization
+	internal class SpecificationsAreMixedCustomization : BaseSpecificationsPassCustomization
 	{
-		public void Customize(IFixture fixture)
-		{
-			var item = fixture.Freeze<TestType>();
+		protected override bool ResultForFirstSpecification { get { return false; } }
 
-			var first = fixture.Create<ISpecification<TestType>>();
-			var second = fixture.Create<ISpecification<TestType>>();
-			var third = fixture.Create<ISpecification<TestType>>();
+		protected override bool ResultForSecondSpecification { get { return true; } }
 
-			A.CallTo(() => first.IsSatisfiedBy(item)).Returns(false);
-			A.CallTo(() => second.IsSatisfiedBy(item)).Returns(true);
-			A.CallTo(() => third.IsSatisfiedBy(item)).Returns(false);
-
-			var array = new[] { first, second, third };
-
-			fixture.Register<IEnumerable<ISpecification<TestType>>>(() => array);
-			fixture.Register<ISpecification<TestType>[]>(() => array);
-		}
+		protected override bool ResultForThirdSpecification { get { return false; } }
 	}
 
 	public class SpecificationsAreMixedAttribute : AutoFakeItEasyDataAttribute

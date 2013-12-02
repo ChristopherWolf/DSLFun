@@ -13,13 +13,8 @@ namespace Common.UnitTests.Specifications.NotSpecificationTests
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldImplementTheExpectedRoles(IFixture fixture)
+		public void ItShouldBeASpecification(NotSpecification<TestType> sut)
 		{
-			// Arrange
-			// Act
-			var sut = fixture.Create<NotSpecification<TestType>>();
-
-			// Assert
 			sut.Should().BeAssignableTo<ISpecification<TestType>>();
 		}
 	}

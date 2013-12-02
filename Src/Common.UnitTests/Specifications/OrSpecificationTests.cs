@@ -1,4 +1,5 @@
-﻿using Common.Specifications;
+﻿using System.Collections.Generic;
+using Common.Specifications;
 using Common.UnitTests.Specifications;
 using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
@@ -12,35 +13,42 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldBeASpecification(IFixture fixture)
+		public void ItShouldBeASpecification(OrSpecification<TestType> sut)
+		{
+			sut.Should().BeAssignableTo<ISpecification<TestType>>();
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithArray(ISpecification<TestType>[] array)
 		{
 			// Arrange
+			var sut = new OrSpecification<TestType>(array);
 
 			// Act
-			var sut = fixture.Create<OrSpecification<TestType>>();
+			var result = sut.InnerSpecifications;
 
 			// Assert
-			sut.Should().BeAssignableTo<ISpecification<TestType>>();
+			result.Should().Equal(array);
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithEnumerable(IEnumerable<ISpecification<TestType>> specifications)
+		{
+			// Arrange
+			var sut = new OrSpecification<TestType>(specifications);
+
+			// Act
+			var result = sut.InnerSpecifications;
+
+			// Assert
+			result.Should().Equal(specifications);
 		}
 	}
 
 	public class WhenTestingIfSpecificationIsCorrect
 	{
 		[Theory, AllInnerSpecificationsPass]
-		public void ItShouldReturnTrueIfAllSpecificationsAreSatisfied(IFixture fixture, TestType item)
-		{
-			// Arrange
-			var sut = fixture.Create<OrSpecification<TestType>>();
-
-			// Act
-			var result = sut.IsSatisfiedBy(item);
-
-			// Assert
-			result.Should().BeTrue();
-		}
-
-		[Theory, SpecificationsAreMixed]
-		public void ItShouldReturnTrueIfSomeInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
+		public void ItShouldReturnTrueIfAllInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
 		{
 			// Arrange
 			var sut = fixture.Create<OrSpecification<TestType>>();
@@ -63,6 +71,19 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 
 			// Assert
 			result.Should().BeFalse();
+		}
+
+		[Theory, SpecificationsAreMixed]
+		public void ItShouldReturnTrueIfSomeInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
+		{
+			// Arrange
+			var sut = fixture.Create<OrSpecification<TestType>>();
+
+			// Act
+			var result = sut.IsSatisfiedBy(item);
+
+			// Assert
+			result.Should().BeTrue();
 		}
 	}
 }
