@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\DaysInMonthEnumerator.cs" />
     <Compile Include="RecurringEvents\SemanticModel\Month.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Command.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Controller.cs" />
