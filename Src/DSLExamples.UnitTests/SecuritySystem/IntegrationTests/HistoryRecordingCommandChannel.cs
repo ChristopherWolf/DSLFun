@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
-using DSLExamples.SemanticModel;
+using DSLExamples.SecuritySystem.SemanticModel;
 
-namespace DSLExamples.UnitTests.IntegrationTests
+namespace DSLExamples.UnitTests.SecuritySystem.IntegrationTests
 {
 	public class HistoryRecordingCommandChannel : ICommandChannel
 	{

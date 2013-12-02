@@ -4,11 +4,11 @@ using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using DSLExamples.SemanticModel;
+using DSLExamples.SecuritySystem.SemanticModel;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace DSLExamples.UnitTests.SemanticModel.StateMachineTests
+namespace DSLExamples.SecuritySystem.UnitTests.SemanticModel.StateMachineTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints

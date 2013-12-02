@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DSLExamples.SemanticModel
+namespace DSLExamples.SecuritySystem.SemanticModel
 {
 	public class Transition
 	{

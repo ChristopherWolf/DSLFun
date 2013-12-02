@@ -82,15 +82,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntegrationTests\HistoryRecordingCommandChannel.cs" />
-    <Compile Include="IntegrationTests\CommandQueryApi\ScenarioUsingCommandQueryApi.cs" />
-    <Compile Include="IntegrationTests\CommandQueryApi\SecretPanelSemanticModel.cs" />
-    <Compile Include="SemanticModel\CommandTests.cs" />
-    <Compile Include="SemanticModel\ControllerTests.cs" />
-    <Compile Include="SemanticModel\EventTests.cs" />
-    <Compile Include="SemanticModel\StateMachineTests.cs" />
-    <Compile Include="SemanticModel\StateTests.cs" />
-    <Compile Include="SemanticModel\TransitionTests.cs" />
+    <Compile Include="SecuritySystem\IntegrationTests\HistoryRecordingCommandChannel.cs" />
+    <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\ScenarioUsingCommandQueryApi.cs" />
+    <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\SecretPanelSemanticModel.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\CommandTests.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\ControllerTests.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\EventTests.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\StateMachineTests.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\StateTests.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\TransitionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

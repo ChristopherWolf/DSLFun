@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
+using DSLExamples.SecuritySystem.SemanticModel;
 
-namespace DSLExamples.SemanticModel
+namespace DSLExamples.SecuritySystem.SemanticModel
 {
 	public interface IState 
 	{

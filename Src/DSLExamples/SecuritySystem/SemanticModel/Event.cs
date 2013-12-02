@@ -1,4 +1,4 @@
-﻿namespace DSLExamples.SemanticModel
+﻿namespace DSLExamples.SecuritySystem.SemanticModel
 {
 	public class Event : AbstractEvent
 	{

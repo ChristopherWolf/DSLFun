@@ -3,11 +3,11 @@ using System.Linq;
 using Common.UnitTests.TestingHelpers;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using DSLExamples.SemanticModel;
+using DSLExamples.SecuritySystem.SemanticModel;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace DSLExamples.UnitTests.SemanticModel.TransitionTests
+namespace DSLExamples.SecuritySystem.UnitTests.SemanticModel.CommandTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints
@@ -19,7 +19,7 @@ namespace DSLExamples.UnitTests.SemanticModel.TransitionTests
 			var assertion = new GuardClauseAssertion(fixture);
 
 			// Act
-			Type sutType = typeof(Transition);
+			Type sutType = typeof(Command);
 
 			// Assert
 			assertion.Verify(sutType);
@@ -30,11 +30,11 @@ namespace DSLExamples.UnitTests.SemanticModel.TransitionTests
 		{
 			// Arrange
 			var assertion = new ConstructorInitializedMemberAssertion(fixture);
-			var type = typeof(Transition);
+			var type = typeof(Command);
 
 			// Act
 			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null && x.Name != "EventCode");
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
 
 			// Assert
 			assertion.Verify(constructors);

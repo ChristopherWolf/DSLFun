@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DSLExamples.SemanticModel
+namespace DSLExamples.SecuritySystem.SemanticModel
 {
 	public interface IStateMachine 
 	{

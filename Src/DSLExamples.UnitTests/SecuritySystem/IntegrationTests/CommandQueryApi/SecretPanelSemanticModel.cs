@@ -1,6 +1,6 @@
-﻿using DSLExamples.SemanticModel;
+﻿using DSLExamples.SecuritySystem.SemanticModel;
 
-namespace DSLExamples.UnitTests.IntegrationTests.CommandQueryApi
+namespace DSLExamples.UnitTests.SecuritySystem.IntegrationTests.CommandQueryApi
 {
 	public class SecretPanelSemanticModel
 	{

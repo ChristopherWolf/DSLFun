@@ -5,11 +5,11 @@ using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit;
-using DSLExamples.SemanticModel;
+using DSLExamples.SecuritySystem.SemanticModel;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace DSLExamples.UnitTests.SemanticModel.ControllerTests
+namespace DSLExamples.SecuritySystem.UnitTests.SemanticModel.ControllerTests
 // ReSharper restore CheckNamespace
 {
 	#region Customizations

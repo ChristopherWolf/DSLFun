@@ -39,14 +39,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SemanticModel\Command.cs" />
-    <Compile Include="SemanticModel\Controller.cs" />
-    <Compile Include="SemanticModel\Event.cs" />
-    <Compile Include="SemanticModel\AbstractEvent.cs" />
-    <Compile Include="SemanticModel\ICommandChannel.cs" />
-    <Compile Include="SemanticModel\State.cs" />
-    <Compile Include="SemanticModel\StateMachine.cs" />
-    <Compile Include="SemanticModel\Transition.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\Command.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\Controller.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\Event.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\AbstractEvent.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\ICommandChannel.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\State.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\StateMachine.cs" />
+    <Compile Include="SecuritySystem\SemanticModel\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -55,7 +55,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="InternalDSL\" />
     <Folder Include="RecurringEvents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

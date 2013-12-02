@@ -4,10 +4,10 @@ using System.Linq;
 using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
 using Ploeh.AutoFixture;
-using DSLExamples.SemanticModel;
+using DSLExamples.SecuritySystem.SemanticModel;
 using Xunit.Extensions;
 
-namespace DSLExamples.UnitTests.IntegrationTests.CommandQueryApi
+namespace DSLExamples.UnitTests.SecuritySystem.IntegrationTests.CommandQueryApi
 {
 	#region Customizations
 

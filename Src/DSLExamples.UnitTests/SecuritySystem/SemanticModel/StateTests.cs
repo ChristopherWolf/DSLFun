@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.UnitTests.TestingHelpers;
+using DSLExamples.SecuritySystem.SemanticModel;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit;
 using Ploeh.SemanticComparison.Fluent;
-using DSLExamples.SemanticModel;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace DSLExamples.UnitTests.SemanticModel.StateTests
+namespace DSLExamples.SecuritySystem.SecuritySystem.UnitTests.SemanticModel.StateTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints
