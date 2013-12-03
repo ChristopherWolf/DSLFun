@@ -12,16 +12,22 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 	{
 		const int FIRST_INDEX = 1;
 
-		ISpecification<DateTime> _content;
-
 		public Schedule(ISpecification<DateTime> content)
 		{
 			if (content == null) throw new ArgumentNullException("content");
 
-			_content = content;
+			Content = content;
 		}
 
-		public ISpecification<DateTime> Content { get { return _content; } }
+		/// <summary>
+		/// The specification created by this builder.
+		/// </summary>
+		public ISpecification<DateTime> Content { get; private set; }
+
+		/// <summary>
+		/// A Contenxt Variable to hold the starting month of the Schedule period.
+		/// </summary>
+		public Month StartingMonth { get; private set; }
 
 		public static Schedule First(DayOfWeek dayOfWeek)
 		{
@@ -32,7 +38,20 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 
 		public Schedule And(Schedule input)
 		{
-			return null;
+			if (input == null) throw new ArgumentNullException("input");
+
+			Content = Content.Or(input.Content);
+
+			return this;
+		}
+
+		public Schedule From(Month month)
+		{
+			if (month == null) throw new ArgumentNullException("month");
+
+			StartingMonth = month;
+
+			return this;
 		}
 	}
 }

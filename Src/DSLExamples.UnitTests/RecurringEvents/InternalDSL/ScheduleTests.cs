@@ -7,7 +7,6 @@ using DSLExamples.RecurringEvents.SemanticModel;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit;
 using Ploeh.SemanticComparison.Fluent;
@@ -17,9 +16,33 @@ using Xunit.Extensions;
 namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 // ReSharper restore CheckNamespace
 {
+	#region Customizations
+
+	internal class ValidMonthCustomization : ICustomization
+	{
+		public void Customize(IFixture fixture)
+		{
+			var generator = fixture.Create<Generator<int>>();
+
+			var monthNumber = generator.First(x => x > 1 && x < 12);
+
+			fixture.Register(() => new Month(monthNumber));
+		}
+	}
+
+	public class ValidMonthAttribute : AutoFakeItEasyDataAttribute
+	{
+		public ValidMonthAttribute()
+			: base(new ValidMonthCustomization())
+		{
+		}
+	}
+
+	#endregion
+
 	public class WhenVerifyingArchitecturalConstraints
 	{
-		[Theory, AutoFakeItEasyData]
+		[Theory, ValidMonth]
 		public void AllMethodsShouldHaveProperGuardClauses(IFixture fixture)
 		{
 			// Arrange
@@ -33,19 +56,16 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void AllConstructorArgumentsShouldBeExposedAsWellBehavedReadOnlyProperties(IFixture fixture)
+		public void ItShouldInitializeTheContentPropertyFromTheConstructor([Frozen] ISpecification<DateTime> content)
 		{
 			// Arrange
-			var assertion = new ConstructorInitializedMemberAssertion(fixture);
-			var type = typeof(Schedule);
+			var sut = new Schedule(content);
 
 			// Act
-			var constructors = type.GetConstructors();
-			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
+			var result = sut.Content;
 
 			// Assert
-			assertion.Verify(constructors);
-			assertion.Verify(readOnlyProperties);
+			result.Should().BeSameAs(content);
 		}
 	}
 
@@ -86,8 +106,13 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 		public void ItShouldOrTheSpecifications(IFixture fixture, ISpecification<DateTime> firstContent, ISpecification<DateTime> secondContent)
 		{
 			// Arrange
+			A.CallTo(() => firstContent.ToString()).Returns("first");
+			A.CallTo(() => secondContent.ToString()).Returns("second");
+
 			var newSchedule = new Schedule(secondContent);
 			var sut = new Schedule(firstContent);
+
+			var expected = new[] { firstContent, secondContent };
 
 			// Act
 			var result = sut.And(newSchedule);
@@ -98,7 +123,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 
 			var spec = result.Content.As<OrSpecification<DateTime>>();
 
-			spec.InnerSpecifications.Should().ContainInOrder(firstContent, secondContent);
+			spec.InnerSpecifications.Should().Equal(expected);
 		}
 
 		[Theory, AutoFakeItEasyData]
@@ -113,5 +138,35 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 			// Assert
 			result.Should().BeSameAs(sut);
 		} 
+	}
+
+	public class WhenTestingTheFromMethod
+	{
+		[Theory, ValidMonth]
+		public void ItShouldSetTheStartingMonthProperty(IFixture fixture, Month month)
+		{
+			// Arrange
+			var sut = fixture.Create<Schedule>();
+
+			// Act
+			var result = sut.From(month);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.StartingMonth.Should().BeSameAs(month);
+		}
+
+		[Theory, ValidMonth]
+		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month month)
+		{
+			// Arrange
+			var sut = fixture.Create<Schedule>();
+
+			// Act
+			var result = sut.From(month);
+
+			// Assert
+			result.Should().BeSameAs(sut);
+		}
 	}
 }

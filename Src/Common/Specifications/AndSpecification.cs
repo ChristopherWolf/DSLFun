@@ -8,15 +8,10 @@ namespace Common.Specifications
 	{
 		readonly ISpecification<TItem>[] _innerSpecifications;
 
-		public IEnumerable<ISpecification<TItem>> InnerSpecifications
-		{
-			get { return _innerSpecifications; }
-		}
+		public IEnumerable<ISpecification<TItem>> InnerSpecifications { get { return _innerSpecifications; } }
 
 		public AndSpecification(IEnumerable<ISpecification<TItem>> innerSpecifications)
-			: this(innerSpecifications.ToArray())
-		{
-		}
+			: this(innerSpecifications.ToArray()) {}
 
 		public AndSpecification(params ISpecification<TItem>[] innerSpecifications)
 		{
@@ -25,9 +20,13 @@ namespace Common.Specifications
 			_innerSpecifications = innerSpecifications;
 		}
 
+		#region ISpecification<TItem> Members
+
 		public bool IsSatisfiedBy(TItem item)
 		{
 			return InnerSpecifications.All(s => s.IsSatisfiedBy(item));
 		}
+
+		#endregion
 	}
 }

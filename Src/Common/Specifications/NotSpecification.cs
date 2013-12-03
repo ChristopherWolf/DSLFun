@@ -6,6 +6,8 @@ namespace Common.Specifications
 	{
 		readonly ISpecification<TItem> _innerSpecification;
 
+		public ISpecification<TItem> InnerSpecification { get { return _innerSpecification; } }
+
 		public NotSpecification(ISpecification<TItem> innerSpecification)
 		{
 			if (innerSpecification == null) throw new ArgumentNullException("innerSpecification");
@@ -13,9 +15,13 @@ namespace Common.Specifications
 			_innerSpecification = innerSpecification;
 		}
 
+		#region ISpecification<TItem> Members
+
 		public bool IsSatisfiedBy(TItem item)
 		{
 			return !_innerSpecification.IsSatisfiedBy(item);
 		}
+
+		#endregion
 	}
 }

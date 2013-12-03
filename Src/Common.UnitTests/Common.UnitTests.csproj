@@ -87,6 +87,7 @@
     <Compile Include="Specifications\NotSpecificationTests.cs" />
     <Compile Include="Specifications\OrSpecificationTests.cs" />
     <Compile Include="Specifications\IsBetweenSpecificationTests.cs" />
+    <Compile Include="Specifications\SpecificationExtensionsTests.cs" />
     <Compile Include="Specifications\TestType.cs" />
     <Compile Include="TestingHelpers\AutoFakeItEasyDataAttribute.cs" />
     <Compile Include="EnumerableExtensionsTests.cs" />
