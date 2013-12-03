@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using DSLExamples.RecurringEvents.SemanticModel;
@@ -30,6 +31,22 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.DayOfWeekInAMonthS
 		public void ItShouldBeAnISpecification(IFixture fixture, DayOfWeekInAMonthSpecification sut)
 		{
 			sut.Should().BeAssignableTo<ISpecification<DateTime>>();
+		}
+
+		[Theory, AutoFakeItEasyData]
+		public void AllConstructorArgumentsShouldBeExposedAsWellBehavedReadOnlyProperties(IFixture fixture)
+		{
+			// Arrange
+			var assertion = new ConstructorInitializedMemberAssertion(fixture);
+			var type = typeof(DayOfWeekInAMonthSpecification);
+
+			// Act
+			var constructors = type.GetConstructors();
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
+
+			// Assert
+			assertion.Verify(constructors);
+			assertion.Verify(readOnlyProperties);
 		}
 
 		[Theory]
@@ -77,7 +94,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.DayOfWeekInAMonthS
 		[InlineData(2013, 12, 29, 4, DayOfWeek.Sunday, false)]
 		[InlineData(2014, 4, 15, 2, DayOfWeek.Tuesday, false)]
 		[InlineData(2013, 12, 1, 3, DayOfWeek.Tuesday, false)]
-		public void ItShouldReturnTheExpectedValueWhenCheckingThePassedInDateIgnoringTheTime(int year, int month, int day, int index,
+		public void ItShouldReturnTheExpectedValueWhenCheckingThePassedInDateAndTheDateHasATimeValue(int year, int month, int day, int index,
 																			  DayOfWeek dayOfWeek, bool expected)
 		{
 			// Arrange

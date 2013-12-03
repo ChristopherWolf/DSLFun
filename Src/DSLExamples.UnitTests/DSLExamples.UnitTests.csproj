@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RecurringEvents\InternalDSL\ScheduleTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DayOfWeekInAMonthSpecificationTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DaysInMonthEnumeratorTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\MonthTests.cs" />
