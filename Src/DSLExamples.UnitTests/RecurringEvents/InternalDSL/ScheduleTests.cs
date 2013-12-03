@@ -106,38 +106,42 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 	public class WhenTestingTheAndMethod
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, ISpecification<DateTime> firstContent, ISpecification<DateTime> secondContent)
+		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture)
 		{
 			// Arrange
-			A.CallTo(() => firstContent.ToString()).Returns("first");
-			A.CallTo(() => secondContent.ToString()).Returns("second");
+			var lhsSpec = fixture.Create<ISpecification<DateTime>>();
+			A.CallTo(() => lhsSpec.ToString()).Returns("LHS Spec");
 
-			var newSchedule = new Schedule(secondContent);
-			var sut = new Schedule(firstContent);
+			var rhsSpec = fixture.Create<ISpecification<DateTime>>();
+			A.CallTo(() => rhsSpec.ToString()).Returns("RHS Spec");
 
-			var expected = new[] { firstContent, secondContent };
+			var additional = new Schedule(rhsSpec);
+			var sut = new Schedule(lhsSpec);
+
+			var likness = lhsSpec.AsSource()
+								.OfLikeness<OrSpecification<DateTime>>()
+								.With(x => x.LHS).EqualsWhen((single, composite) => composite.LHS == lhsSpec)
+								.With(x => x.RHS).EqualsWhen((single, composite) => composite.RHS == rhsSpec);
 
 			// Act
-			var result = sut.And(newSchedule);
+			var result = sut.And(additional);
 
 			// Assert
 			result.Should().NotBeNull();
+			result.Content.Should().NotBeNull();
 			result.Content.Should().BeOfType<OrSpecification<DateTime>>();
 
-			var spec = result.Content.As<OrSpecification<DateTime>>();
-
-			spec.Lhs.Should().BeSameAs(firstContent);
-			spec.Rhs.Should().BeSameAs(secondContent);
+			likness.ShouldEqual(result.Content.As<OrSpecification<DateTime>>());
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Schedule newSchedule)
+		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Schedule additional)
 		{
 			// Arrange
 			var sut = fixture.Create<Schedule>();
 
 			// Act
-			var result = sut.And(newSchedule);
+			var result = sut.And(additional);
 
 			// Assert
 			result.Should().BeSameAs(sut);
@@ -174,60 +178,50 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 		}
 	}
 
-	public class WhenTestingTheUntilMethod
-	{
-		[Theory, ValidMonth]
-		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, ISpecification<DateTime> content, Month month)
-		{
-			// Arrange
-			var sut = new Schedule(content);
-
-			// Act
-			var result = sut.Until(month);
-
-			// Assert
-			result.Should().NotBeNull();
-			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
-		}
-
+//	public class WhenTestingTheUntilMethod
+//	{
 //		[Theory, ValidMonth]
-//		public void ItShouldReturnTheCorrectCompositeSpecification2(IFixture fixture, ISpecification<DateTime> content, Month month)
+//		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, Month startMonth, Month month)
 //		{
 //			// Arrange
-//			var sut = new Schedule(content);
+//			var lhsSpec = fixture.Create<ISpecification<DateTime>>();
+//			A.CallTo(() => lhsSpec.ToString()).Returns("LHS Spec");
 //
-//			Predicate<AndSpecification<DateTime>> matcher = specification =>
-//			{
-//				var inner = specification.InnerSpecifications.ToArray();
+//			var rhsSpec = fixture.Create<ISpecification<DateTime>>();
+//			A.CallTo(() => rhsSpec.ToString()).Returns("RHS Spec");
 //
-//				return inner.Length == 2 &&
-//					   inner[0].Equals(content);
-//			};
+//			var additional = new Schedule(rhsSpec);
+//			var sut = new Schedule(lhsSpec);
 //
-//			var likness = sut.AsSource()
-//							 .OfLikeness<AndSpecification<DateTime>>()
-//							 .With(x => x.InnerSpecifications).EqualsWhen((schedule, specification) => matcher(specification));
+//			var likness = lhsSpec.AsSource()
+//								.OfLikeness<AndSpecification<DateTime>>()
+//								.With(x => x.LHS).EqualsWhen((single, composite) => composite.LHS == lhsSpec)
+//								.With(x => x.RHS).EqualsWhen((single, composite) => composite.RHS == rhsSpec);
 //
 //			// Act
 //			var result = sut.Until(month);
 //
 //			// Assert
-//			var spec = result.Content.As<AndSpecification<DateTime>>();
+//			result.Should().NotBeNull();
+//			result.Content.Should().NotBeNull();
+//			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
 //
-//			likness.ShouldEqual(spec);
+//			likness.ShouldEqual(result.Content.As<AndSpecification<DateTime>>());
 //		}
-
-		[Theory, ValidMonth]
-		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month month)
-		{
-			// Arrange
-			var sut = fixture.Create<Schedule>();
-
-			// Act
-			var result = sut.Until(month);
-
-			// Assert
-			result.Should().BeSameAs(sut);
-		} 
-	}
+//
+//		[Theory, ValidMonth]
+//		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month startMonth, Month month)
+//		{
+//			// Arrange
+//			var sut = fixture.Create<Schedule>();
+//
+//			sut.From(startMonth);
+//
+//			// Act
+//			var result = sut.Until(month);
+//
+//			// Assert
+//			result.Should().BeSameAs(sut);
+//		} 
+//	}
 }

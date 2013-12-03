@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Specifications\AndSpecificationTests.cs" />
-    <Compile Include="Specifications\CommonCustomizations.cs" />
     <Compile Include="Specifications\NotSpecificationTests.cs" />
     <Compile Include="Specifications\OrSpecificationTests.cs" />
     <Compile Include="Specifications\IsBetweenSpecificationTests.cs" />

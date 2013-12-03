@@ -7,9 +7,9 @@ namespace Common.Specifications
 		readonly ISpecification<TItem> _lhs;
 		readonly ISpecification<TItem> _rhs;
 
-		public ISpecification<TItem> Lhs { get { return _lhs; } }
+		public ISpecification<TItem> LHS { get { return _lhs; } }
 
-		public ISpecification<TItem> Rhs { get { return _rhs; } }
+		public ISpecification<TItem> RHS { get { return _rhs; } }
 
 		public AndSpecification(ISpecification<TItem> lhs, ISpecification<TItem> rhs)
 		{
@@ -24,7 +24,7 @@ namespace Common.Specifications
 
 		public bool IsSatisfiedBy(TItem item)
 		{
-			return Lhs.IsSatisfiedBy(item) && Rhs.IsSatisfiedBy(item);
+			return LHS.IsSatisfiedBy(item) && RHS.IsSatisfiedBy(item);
 		}
 
 		#endregion

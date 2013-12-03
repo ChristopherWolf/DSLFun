@@ -6,7 +6,6 @@ using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
@@ -45,7 +44,7 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.OrSpecificat
 		[InlineData(true, false, true)]
 		[InlineData(false, true, true)]
 		[InlineData(false, false, false)]
-		public void ItShouldReturnTheCorrectValueForAllPossibleCombinations(bool lhsResult, bool rhsResult, bool expected)
+		public void ItShouldReturnTheCorrectValueForAllPossibleLHSAndRHSCombinations(bool lhsResult, bool rhsResult, bool expected)
 		{
 			// Arrange
 			var item = new TestType();
@@ -64,57 +63,5 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.OrSpecificat
 			// Assert
 			result.Should().Be(expected);
 		}
-
-//		[Theory, BothSpecificationsPass]
-//		public void ItShouldReturnTrueIfBothSpecificationsAreSatisfied(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeTrue();
-//		}
-//
-//		[Theory, BothSpecificationsFail]
-//		public void ItShouldReturnFalseIfNeitherSpecificationIsSatisfied(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeFalse();
-//		}
-//
-//		[Theory, FirstSpecificationFailsAndSecondPasses]
-//		public void ItShouldReturnTrueIfFirstSpecificationFails(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeTrue();
-//		}
-//
-//		[Theory, FirstSpecificationPassesAndSecondFails]
-//		public void ItShouldReturnTrueIfSecondSpecificationFails(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeTrue();
-//		}
 	}
 }

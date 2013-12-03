@@ -44,7 +44,7 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 		[InlineData(true, false, false)]
 		[InlineData(false, true, false)]
 		[InlineData(false, false, false)]
-		public void ItShouldReturnTheCorrectValueForAllPossibleCombinations(bool lhsResult, bool rhsResult, bool expected)
+		public void ItShouldReturnTheCorrectValueForAllPossibleLHSAndRHSCombinations(bool lhsResult, bool rhsResult, bool expected)
 		{
 			// Arrange
 			var item = new TestType();
@@ -63,57 +63,5 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 			// Assert
 			result.Should().Be(expected);
 		}
-
-//		[Theory, BothSpecificationsPass]
-//		public void ItShouldReturnTrueIfBothSpecificationsAreSatisfied(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new AndSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeTrue();
-//		}
-//
-//		[Theory, BothSpecificationsFail]
-//		public void ItShouldReturnFalseIfNeitherSpecificationIsSatisfied(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new AndSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeFalse();
-//		}
-//
-//		[Theory, FirstSpecificationFailsAndSecondPasses]
-//		public void ItShouldReturnFalseIfFirstSpecificationFails(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new AndSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeFalse();
-//		}
-//
-//		[Theory, FirstSpecificationPassesAndSecondFails]
-//		public void ItShouldReturnFalseIfSecondSpecificationFails(TestType item, SpecificationPair pair)
-//		{
-//			// Arrange
-//			var sut = new AndSpecification<TestType>(pair.Lhs, pair.Rhs);
-//
-//			// Act
-//			var result = sut.IsSatisfiedBy(item);
-//
-//			// Assert
-//			result.Should().BeFalse();
-//		}
 	}
 }

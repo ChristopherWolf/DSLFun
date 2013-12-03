@@ -13,7 +13,7 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 	public class WhenUsingTheAndExtensionMethod
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheExpectedValue(IFixture fixture)
+		public void ItShouldReturnTheExpectedCompositeSpecification(IFixture fixture)
 		{
 			// Arrange
 			var lhsSpec = fixture.Create<ISpecification<int>>();
@@ -24,8 +24,8 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 
 			var likness = lhsSpec.AsSource()
 								.OfLikeness<AndSpecification<int>>()
-								.With(x => x.Lhs).EqualsWhen((specification, andSpecification) => andSpecification.Lhs == specification)
-								.With(x => x.Rhs).EqualsWhen((specification, andSpecification) => andSpecification.Rhs == specification);
+								.With(x => x.LHS).EqualsWhen((single, composite) => composite.LHS == lhsSpec)
+								.With(x => x.RHS).EqualsWhen((single, composite) => composite.RHS == rhsSpec);
 
 			// Act
 			var result = lhsSpec.And(rhsSpec);
@@ -40,7 +40,7 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 	public class WhenUsingTheOrExtensionMethod
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnTheExpectedValue(IFixture fixture)
+		public void ItShouldReturnTheExpectedCompositeSpecification(IFixture fixture)
 		{
 			// Arrange
 			var lhsSpec = fixture.Create<ISpecification<int>>();
@@ -51,8 +51,8 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 
 			var likness = lhsSpec.AsSource()
 								.OfLikeness<OrSpecification<int>>()
-								.With(x => x.Lhs).EqualsWhen((specification, andSpecification) => andSpecification.Lhs == specification)
-								.With(x => x.Rhs).EqualsWhen((specification, andSpecification) => andSpecification.Rhs == specification);
+								.With(x => x.LHS).EqualsWhen((single, composite) => composite.LHS == lhsSpec)
+								.With(x => x.RHS).EqualsWhen((single, composite) => composite.RHS == rhsSpec);
 
 			// Act
 			var result = lhsSpec.Or(rhsSpec);
