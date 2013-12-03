@@ -4,6 +4,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Xunit.Extensions;
+using Ploeh.SemanticComparison.Fluent;
 
 // ReSharper disable CheckNamespace
 namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
@@ -21,7 +22,10 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 			var rhsSpec = fixture.Create<ISpecification<int>>();
 			A.CallTo(() => rhsSpec.ToString()).Returns("RHS");
 
-			var expected = new[] {lhsSpec, rhsSpec};
+			var likness = lhsSpec.AsSource()
+								.OfLikeness<AndSpecification<int>>()
+								.With(x => x.Lhs).EqualsWhen((specification, andSpecification) => andSpecification.Lhs == specification)
+								.With(x => x.Rhs).EqualsWhen((specification, andSpecification) => andSpecification.Rhs == specification);
 
 			// Act
 			var result = lhsSpec.And(rhsSpec);
@@ -29,7 +33,7 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 			// Assert
 			result.Should().NotBeNull();
 			result.Should().BeOfType<AndSpecification<int>>();
-			result.As<AndSpecification<int>>().InnerSpecifications.Should().Equal(expected);
+			likness.ShouldEqual(result.As<AndSpecification<int>>());
 		}
 	}
 
@@ -45,7 +49,10 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 			var rhsSpec = fixture.Create<ISpecification<int>>();
 			A.CallTo(() => rhsSpec.ToString()).Returns("RHS");
 
-			var expected = new[] { lhsSpec, rhsSpec };
+			var likness = lhsSpec.AsSource()
+								.OfLikeness<OrSpecification<int>>()
+								.With(x => x.Lhs).EqualsWhen((specification, andSpecification) => andSpecification.Lhs == specification)
+								.With(x => x.Rhs).EqualsWhen((specification, andSpecification) => andSpecification.Rhs == specification);
 
 			// Act
 			var result = lhsSpec.Or(rhsSpec);
@@ -53,7 +60,7 @@ namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
 			// Assert
 			result.Should().NotBeNull();
 			result.Should().BeOfType<OrSpecification<int>>();
-			result.As<OrSpecification<int>>().InnerSpecifications.Should().Equal(expected);
+			likness.ShouldEqual(result.As<OrSpecification<int>>());
 		}
 	}
 

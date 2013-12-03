@@ -1,83 +1,105 @@
-﻿using Common.Specifications;
+﻿using System;
+using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using FakeItEasy;
 using Ploeh.AutoFixture;
-using System.Collections.Generic;
 
 namespace Common.UnitTests.Specifications
 {
-	internal abstract class BaseSpecificationsPassCustomization : ICustomization
+	public class SpecificationPair
 	{
-		protected abstract bool ResultForFirstSpecification { get; }
-		protected abstract bool ResultForSecondSpecification { get; }
-		protected abstract bool ResultForThirdSpecification { get; }
+		readonly ISpecification<TestType> _lhs;
+		readonly ISpecification<TestType> _rhs;
+
+		public SpecificationPair(ISpecification<TestType> lhs, ISpecification<TestType> rhs)
+		{
+			if (lhs == null) throw new ArgumentNullException("lhs");
+			if (rhs == null) throw new ArgumentNullException("rhs");
+
+			_lhs = lhs;
+			_rhs = rhs;
+		}
+
+		public ISpecification<TestType> Lhs { get { return _lhs; } }
+
+		public ISpecification<TestType> Rhs { get { return _rhs; } }
+	}
+
+	internal abstract class BaseSpecificationPairCustomization : ICustomization
+	{
+		protected abstract bool ResultForLHSSpecification { get; }
+		protected abstract bool ResultForRHSSpecification { get; }
 
 		public void Customize(IFixture fixture)
 		{
 			var item = fixture.Freeze<TestType>();
 
-			var first = fixture.Create<ISpecification<TestType>>();
-			var second = fixture.Create<ISpecification<TestType>>();
-			var third = fixture.Create<ISpecification<TestType>>();
+			var lhs = fixture.Create<ISpecification<TestType>>();
+			var rhs = fixture.Create<ISpecification<TestType>>();
 
-			A.CallTo(() => first.IsSatisfiedBy(item)).Returns(ResultForFirstSpecification);
-			A.CallTo(() => second.IsSatisfiedBy(item)).Returns(ResultForSecondSpecification);
-			A.CallTo(() => third.IsSatisfiedBy(item)).Returns(ResultForThirdSpecification);
+			A.CallTo(() => lhs.IsSatisfiedBy(item)).Returns(ResultForLHSSpecification);
+			A.CallTo(() => rhs.IsSatisfiedBy(item)).Returns(ResultForRHSSpecification);
 
-			var array = new[] { first, second, third };
-
-			fixture.Register<IEnumerable<ISpecification<TestType>>>(() => array);
-			fixture.Register<ISpecification<TestType>[]>(() => array);
+			fixture.Inject(new SpecificationPair(lhs, rhs));
 		}
 	}
 
-	internal class AllInnerSpecificationsPassCustomization : BaseSpecificationsPassCustomization
+	internal class BothSpecificationsPassCustomization : BaseSpecificationPairCustomization
 	{
-		protected override bool ResultForFirstSpecification { get { return true; } }
+		protected override bool ResultForLHSSpecification { get { return true; } }
 
-		protected override bool ResultForSecondSpecification { get { return true; } }
-
-		protected override bool ResultForThirdSpecification { get { return true; } }
+		protected override bool ResultForRHSSpecification { get { return true; } }
 	}
 
-	public class AllInnerSpecificationsPassAttribute : AutoFakeItEasyDataAttribute
+	public class BothSpecificationsPassAttribute : AutoFakeItEasyDataAttribute
 	{
-		public AllInnerSpecificationsPassAttribute()
-			: base(new AllInnerSpecificationsPassCustomization())
+		public BothSpecificationsPassAttribute()
+			: base(new BothSpecificationsPassCustomization())
 		{
 		}
 	}
 
-	internal class AllInnerSpecificationsFailCustomization : BaseSpecificationsPassCustomization
+	internal class BothSpecificationsFailCustomization : BaseSpecificationPairCustomization
 	{
-		protected override bool ResultForFirstSpecification { get { return false; } }
+		protected override bool ResultForLHSSpecification { get { return false; } }
 
-		protected override bool ResultForSecondSpecification { get { return false; } }
-
-		protected override bool ResultForThirdSpecification { get { return false; } }
+		protected override bool ResultForRHSSpecification { get { return false; } }
 	}
 
-	public class AllInnerSpecificationsFailAttribute : AutoFakeItEasyDataAttribute
+	public class BothSpecificationsFailAttribute : AutoFakeItEasyDataAttribute
 	{
-		public AllInnerSpecificationsFailAttribute()
-			: base(new AllInnerSpecificationsFailCustomization())
+		public BothSpecificationsFailAttribute()
+			: base(new BothSpecificationsFailCustomization())
 		{
 		}
 	}
 
-	internal class SpecificationsAreMixedCustomization : BaseSpecificationsPassCustomization
+	internal class FirstSpecificationPassesAndSecondFailsCustomization : BaseSpecificationPairCustomization
 	{
-		protected override bool ResultForFirstSpecification { get { return false; } }
+		protected override bool ResultForLHSSpecification { get { return false; } }
 
-		protected override bool ResultForSecondSpecification { get { return true; } }
-
-		protected override bool ResultForThirdSpecification { get { return false; } }
+		protected override bool ResultForRHSSpecification { get { return true; } }
 	}
 
-	public class SpecificationsAreMixedAttribute : AutoFakeItEasyDataAttribute
+	public class FirstSpecificationPassesAndSecondFailsAttribute : AutoFakeItEasyDataAttribute
 	{
-		public SpecificationsAreMixedAttribute()
-			: base(new SpecificationsAreMixedCustomization())
+		public FirstSpecificationPassesAndSecondFailsAttribute()
+			: base(new FirstSpecificationPassesAndSecondFailsCustomization())
+		{
+		}
+	}
+
+	internal class FirstSpecificationFailsAndSecondPassesCustomization : BaseSpecificationPairCustomization
+	{
+		protected override bool ResultForLHSSpecification { get { return true; } }
+
+		protected override bool ResultForRHSSpecification { get { return false; } }
+	}
+
+	public class FirstSpecificationFailsAndSecondPassesAttribute : AutoFakeItEasyDataAttribute
+	{
+		public FirstSpecificationFailsAndSecondPassesAttribute()
+			: base(new FirstSpecificationFailsAndSecondPassesCustomization())
 		{
 		}
 	}

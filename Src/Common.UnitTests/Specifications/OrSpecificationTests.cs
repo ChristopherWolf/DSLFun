@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using Common.Specifications;
 using Common.UnitTests.Specifications;
 using Common.UnitTests.TestingHelpers;
+using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.Idioms;
+using Ploeh.AutoFixture.Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecificationTests.OrSpecificationTests
+namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.OrSpecificationTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints
@@ -19,71 +22,99 @@ namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecifica
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithArray(ISpecification<TestType>[] array)
+		public void AllConstructorArgumentsShouldBeExposedAsWellBehavedReadOnlyProperties(IFixture fixture)
 		{
 			// Arrange
-			var sut = new OrSpecification<TestType>(array);
+			var assertion = new ConstructorInitializedMemberAssertion(fixture);
+			var type = typeof(OrSpecification<TestType>);
 
 			// Act
-			var result = sut.InnerSpecifications;
+			var constructors = type.GetConstructors();
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
 
 			// Assert
-			result.Should().Equal(array);
-		}
-
-		[Theory, AutoFakeItEasyData]
-		public void InnerSpecificationsShouldBeCorrectWhenInitializedWithEnumerable(IEnumerable<ISpecification<TestType>> specifications)
-		{
-			// Arrange
-			var sut = new OrSpecification<TestType>(specifications);
-
-			// Act
-			var result = sut.InnerSpecifications;
-
-			// Assert
-			result.Should().Equal(specifications);
+			assertion.Verify(constructors);
+			assertion.Verify(readOnlyProperties);
 		}
 	}
 
 	public class WhenTestingIfSpecificationIsCorrect
 	{
-		[Theory, AllInnerSpecificationsPass]
-		public void ItShouldReturnTrueIfAllInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
+		[Theory]
+		[InlineData(true, true, true)]
+		[InlineData(true, false, true)]
+		[InlineData(false, true, true)]
+		[InlineData(false, false, false)]
+		public void ItShouldReturnTheCorrectValueForAllPossibleCombinations(bool lhsResult, bool rhsResult, bool expected)
 		{
 			// Arrange
-			var sut = fixture.Create<OrSpecification<TestType>>();
+			var item = new TestType();
+
+			var lhs = A.Fake<ISpecification<TestType>>();
+			A.CallTo(() => lhs.IsSatisfiedBy(item)).Returns(lhsResult);
+
+			var rhs = A.Fake<ISpecification<TestType>>();
+			A.CallTo(() => rhs.IsSatisfiedBy(item)).Returns(rhsResult);
+
+			var sut = new OrSpecification<TestType>(lhs, rhs);
 
 			// Act
 			var result = sut.IsSatisfiedBy(item);
 
 			// Assert
-			result.Should().BeTrue();
+			result.Should().Be(expected);
 		}
 
-		[Theory, AllInnerSpecificationsFail]
-		public void ItShouldReturnFalseIfNoInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
-		{
-			// Arrange
-			var sut = fixture.Create<OrSpecification<TestType>>();
-
-			// Act
-			var result = sut.IsSatisfiedBy(item);
-
-			// Assert
-			result.Should().BeFalse();
-		}
-
-		[Theory, SpecificationsAreMixed]
-		public void ItShouldReturnTrueIfSomeInnerSpecificationsAreSatisfied(IFixture fixture, TestType item)
-		{
-			// Arrange
-			var sut = fixture.Create<OrSpecification<TestType>>();
-
-			// Act
-			var result = sut.IsSatisfiedBy(item);
-
-			// Assert
-			result.Should().BeTrue();
-		}
+//		[Theory, BothSpecificationsPass]
+//		public void ItShouldReturnTrueIfBothSpecificationsAreSatisfied(TestType item, SpecificationPair pair)
+//		{
+//			// Arrange
+//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
+//
+//			// Act
+//			var result = sut.IsSatisfiedBy(item);
+//
+//			// Assert
+//			result.Should().BeTrue();
+//		}
+//
+//		[Theory, BothSpecificationsFail]
+//		public void ItShouldReturnFalseIfNeitherSpecificationIsSatisfied(TestType item, SpecificationPair pair)
+//		{
+//			// Arrange
+//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
+//
+//			// Act
+//			var result = sut.IsSatisfiedBy(item);
+//
+//			// Assert
+//			result.Should().BeFalse();
+//		}
+//
+//		[Theory, FirstSpecificationFailsAndSecondPasses]
+//		public void ItShouldReturnTrueIfFirstSpecificationFails(TestType item, SpecificationPair pair)
+//		{
+//			// Arrange
+//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
+//
+//			// Act
+//			var result = sut.IsSatisfiedBy(item);
+//
+//			// Assert
+//			result.Should().BeTrue();
+//		}
+//
+//		[Theory, FirstSpecificationPassesAndSecondFails]
+//		public void ItShouldReturnTrueIfSecondSpecificationFails(TestType item, SpecificationPair pair)
+//		{
+//			// Arrange
+//			var sut = new OrSpecification<TestType>(pair.Lhs, pair.Rhs);
+//
+//			// Act
+//			var result = sut.IsSatisfiedBy(item);
+//
+//			// Assert
+//			result.Should().BeTrue();
+//		}
 	}
 }

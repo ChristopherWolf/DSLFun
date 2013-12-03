@@ -7,6 +7,10 @@ namespace Common.Specifications
 		readonly TItem _start;
 		readonly TItem _end;
 
+		public TItem Start { get { return _start; } }
+
+		public TItem End { get { return _end; } }
+
 		public IsBetweenSpecification(TItem start, TItem end)
 		{
 			_start = start;

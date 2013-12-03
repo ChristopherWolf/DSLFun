@@ -1,31 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Common.Specifications
 {
 	public class OrSpecification<TItem> : ISpecification<TItem>
 	{
-		readonly ISpecification<TItem>[] _innerSpecifications;
+		readonly ISpecification<TItem> _lhs;
+		readonly ISpecification<TItem> _rhs;
 
-		public IEnumerable<ISpecification<TItem>> InnerSpecifications { get { return _innerSpecifications; } }
+		public ISpecification<TItem> Lhs { get { return _lhs; } }
 
-		public OrSpecification(IEnumerable<ISpecification<TItem>> innerSpecifications)
-			: this(innerSpecifications.ToArray()) {}
+		public ISpecification<TItem> Rhs { get { return _rhs; } }
 
-		public OrSpecification(params ISpecification<TItem>[] innerSpecifications)
+		public OrSpecification(ISpecification<TItem> lhs, ISpecification<TItem> rhs)
 		{
-			if (innerSpecifications == null) throw new ArgumentNullException("innerSpecifications");
+			if (lhs == null) throw new ArgumentNullException("lhs");
+			if (rhs == null) throw new ArgumentNullException("rhs");
 
-			_innerSpecifications = innerSpecifications;
+			_lhs = lhs;
+			_rhs = rhs;
 		}
 
 		#region ISpecification<TItem> Members
 
 		public bool IsSatisfiedBy(TItem item)
 		{
-			return InnerSpecifications.Any(s => s.IsSatisfiedBy(item));
-		}	
+			return Lhs.IsSatisfiedBy(item) || Rhs.IsSatisfiedBy(item);
+		}
 
 		#endregion
 	}

@@ -1,30 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Common.Specifications
 {
 	public class AndSpecification<TItem> : ISpecification<TItem>
 	{
-		readonly ISpecification<TItem>[] _innerSpecifications;
+		readonly ISpecification<TItem> _lhs;
+		readonly ISpecification<TItem> _rhs;
 
-		public IEnumerable<ISpecification<TItem>> InnerSpecifications { get { return _innerSpecifications; } }
+		public ISpecification<TItem> Lhs { get { return _lhs; } }
 
-		public AndSpecification(IEnumerable<ISpecification<TItem>> innerSpecifications)
-			: this(innerSpecifications.ToArray()) {}
+		public ISpecification<TItem> Rhs { get { return _rhs; } }
 
-		public AndSpecification(params ISpecification<TItem>[] innerSpecifications)
+		public AndSpecification(ISpecification<TItem> lhs, ISpecification<TItem> rhs)
 		{
-			if (innerSpecifications == null) throw new ArgumentNullException("innerSpecifications");
+			if (lhs == null) throw new ArgumentNullException("lhs");
+			if (rhs == null) throw new ArgumentNullException("rhs");
 
-			_innerSpecifications = innerSpecifications;
+			_lhs = lhs;
+			_rhs = rhs;
 		}
 
 		#region ISpecification<TItem> Members
 
 		public bool IsSatisfiedBy(TItem item)
 		{
-			return InnerSpecifications.All(s => s.IsSatisfiedBy(item));
+			return Lhs.IsSatisfiedBy(item) && Rhs.IsSatisfiedBy(item);
 		}
 
 		#endregion

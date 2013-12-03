@@ -25,7 +25,7 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 		public ISpecification<DateTime> Content { get; private set; }
 
 		/// <summary>
-		/// A Contenxt Variable to hold the starting month of the Schedule period.
+		/// A Context Variable to hold the starting month of the Schedule period.
 		/// </summary>
 		public Month StartingMonth { get; private set; }
 
@@ -40,6 +40,7 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 		{
 			if (input == null) throw new ArgumentNullException("input");
 
+			// Note: use Or here instead of And
 			Content = Content.Or(input.Content);
 
 			return this;
@@ -49,9 +50,22 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 		{
 			if (month == null) throw new ArgumentNullException("month");
 
+			if(StartingMonth != null)
+				throw new InvalidOperationException("The starting month has already been set");
+
 			StartingMonth = month;
 
 			return this;
+		}
+
+		public Schedule Until(Month month)
+		{
+			if (month == null) throw new ArgumentNullException("month");
+
+			if(StartingMonth == null)
+				throw new InvalidOperationException("The starting month must be set first");
+
+			return null;
 		}
 	}
 }

@@ -3,6 +3,7 @@ using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using FluentAssertions;
 using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.Idioms;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
@@ -54,83 +55,99 @@ namespace Common.UnitTests.Specifications.Dates.IsBetweenSpecificationTests
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
+		public void AllConstructorArgumentsShouldBeExposedAsWellBehavedReadOnlyProperties(IFixture fixture)
+		{
+			// Arrange
+			var assertion = new ConstructorInitializedMemberAssertion(fixture);
+			var type = typeof(IsBetweenSpecification<int>);
+
+			// Act
+			var constructors = type.GetConstructors();
+			var readOnlyProperties = type.GetProperties().Where(x => x.GetSetMethod(nonPublic: true) == null);
+
+			// Assert
+			assertion.Verify(constructors);
+			assertion.Verify(readOnlyProperties);
+		}
+
+		[Theory, AutoFakeItEasyData]
 		public void ItShouldBe(IFixture fixture, IsBetweenSpecification<int> sut)
 		{
 			sut.Should().BeAssignableTo<ISpecification<int>>();
 		}
+	}
 
-		public class WhenTestingIfSpecificationIsCorrect
+	public class WhenTestingIfSpecificationIsCorrect
+	{
+		[Theory, StartValueIsBeforeEnd]
+		public void ItShouldReturnTrueIfItemIsEqualToStart(StartAndEndTuple tuple)
 		{
-			[Theory, StartValueIsBeforeEnd]
-			public void ItShouldReturnTrueIfItemIsEqualToStart(StartAndEndTuple tuple)
-			{
-				// Arrange
-				var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
+			// Arrange
+			var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
 
-				// Act
-				var result = sut.IsSatisfiedBy(tuple.Start);
+			// Act
+			var result = sut.IsSatisfiedBy(tuple.Start);
 
-				// Assert
-				result.Should().BeTrue();
-			}
+			// Assert
+			result.Should().BeTrue();
+		}
 
-			[Theory, StartValueIsBeforeEnd]
-			public void ItShouldReturnTrueIfItemIsEqualToEnd(StartAndEndTuple tuple)
-			{
-				// Arrange
-				var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
+		[Theory, StartValueIsBeforeEnd]
+		public void ItShouldReturnTrueIfItemIsEqualToEnd(StartAndEndTuple tuple)
+		{
+			// Arrange
+			var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
 
-				// Act
-				var result = sut.IsSatisfiedBy(tuple.End);
+			// Act
+			var result = sut.IsSatisfiedBy(tuple.End);
 
-				// Assert
-				result.Should().BeTrue();
-			}
+			// Assert
+			result.Should().BeTrue();
+		}
 
-			[Theory, StartValueIsBeforeEnd]
-			public void ItShouldReturnTrueIfItemIsBetweenStartAndEnd(StartAndEndTuple tuple, Generator<int> generator)
-			{
-				// Arrange
-				var item = generator.First(x => x > tuple.Start && x < tuple.End);
+		[Theory, StartValueIsBeforeEnd]
+		public void ItShouldReturnTrueIfItemIsBetweenStartAndEnd(StartAndEndTuple tuple, Generator<int> generator)
+		{
+			// Arrange
+			var item = generator.First(x => x > tuple.Start && x < tuple.End);
 
-				var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
+			var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
 
-				// Act
-				var result = sut.IsSatisfiedBy(item);
+			// Act
+			var result = sut.IsSatisfiedBy(item);
 
-				// Assert
-				result.Should().BeTrue();
-			}
+			// Assert
+			result.Should().BeTrue();
+		}
 
-			[Theory, StartValueIsBeforeEnd]
-			public void ItShouldReturnFalseIfItemIsBeforeStart(StartAndEndTuple tuple, Generator<int> generator)
-			{
-				// Arrange
-				var item = generator.First(x => x < tuple.Start);
+		[Theory, StartValueIsBeforeEnd]
+		public void ItShouldReturnFalseIfItemIsBeforeStart(StartAndEndTuple tuple, Generator<int> generator)
+		{
+			// Arrange
+			var item = generator.First(x => x < tuple.Start);
 
-				var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
+			var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
 
-				// Act
-				var result = sut.IsSatisfiedBy(item);
+			// Act
+			var result = sut.IsSatisfiedBy(item);
 
-				// Assert
-				result.Should().BeFalse();
-			}
+			// Assert
+			result.Should().BeFalse();
+		}
 
-			[Theory, StartValueIsBeforeEnd]
-			public void ItShouldReturnFalseIfItemIsAfterEnd(StartAndEndTuple tuple, Generator<int> generator)
-			{
-				// Arrange
-				var item = generator.First(x => x > tuple.End);
+		[Theory, StartValueIsBeforeEnd]
+		public void ItShouldReturnFalseIfItemIsAfterEnd(StartAndEndTuple tuple, Generator<int> generator)
+		{
+			// Arrange
+			var item = generator.First(x => x > tuple.End);
 
-				var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
+			var sut = new IsBetweenSpecification<int>(tuple.Start, tuple.End);
 
-				// Act
-				var result = sut.IsSatisfiedBy(item);
+			// Act
+			var result = sut.IsSatisfiedBy(item);
 
-				// Assert
-				result.Should().BeFalse();
-			}
+			// Assert
+			result.Should().BeFalse();
 		}
 	}
 }

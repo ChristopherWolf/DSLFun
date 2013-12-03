@@ -24,9 +24,12 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 		{
 			var generator = fixture.Create<Generator<int>>();
 
-			var monthNumber = generator.First(x => x > 1 && x < 12);
+			fixture.Register(() =>
+				{
+					var monthNumber = generator.First(x => x > 1 && x < 12);
 
-			fixture.Register(() => new Month(monthNumber));
+					return new Month(monthNumber);
+				});
 		}
 	}
 
@@ -103,7 +106,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 	public class WhenTestingTheAndMethod
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldOrTheSpecifications(IFixture fixture, ISpecification<DateTime> firstContent, ISpecification<DateTime> secondContent)
+		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, ISpecification<DateTime> firstContent, ISpecification<DateTime> secondContent)
 		{
 			// Arrange
 			A.CallTo(() => firstContent.ToString()).Returns("first");
@@ -123,7 +126,8 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 
 			var spec = result.Content.As<OrSpecification<DateTime>>();
 
-			spec.InnerSpecifications.Should().Equal(expected);
+			spec.Lhs.Should().BeSameAs(firstContent);
+			spec.Rhs.Should().BeSameAs(secondContent);
 		}
 
 		[Theory, AutoFakeItEasyData]
@@ -168,5 +172,62 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 			// Assert
 			result.Should().BeSameAs(sut);
 		}
+	}
+
+	public class WhenTestingTheUntilMethod
+	{
+		[Theory, ValidMonth]
+		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, ISpecification<DateTime> content, Month month)
+		{
+			// Arrange
+			var sut = new Schedule(content);
+
+			// Act
+			var result = sut.Until(month);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
+		}
+
+//		[Theory, ValidMonth]
+//		public void ItShouldReturnTheCorrectCompositeSpecification2(IFixture fixture, ISpecification<DateTime> content, Month month)
+//		{
+//			// Arrange
+//			var sut = new Schedule(content);
+//
+//			Predicate<AndSpecification<DateTime>> matcher = specification =>
+//			{
+//				var inner = specification.InnerSpecifications.ToArray();
+//
+//				return inner.Length == 2 &&
+//					   inner[0].Equals(content);
+//			};
+//
+//			var likness = sut.AsSource()
+//							 .OfLikeness<AndSpecification<DateTime>>()
+//							 .With(x => x.InnerSpecifications).EqualsWhen((schedule, specification) => matcher(specification));
+//
+//			// Act
+//			var result = sut.Until(month);
+//
+//			// Assert
+//			var spec = result.Content.As<AndSpecification<DateTime>>();
+//
+//			likness.ShouldEqual(spec);
+//		}
+
+		[Theory, ValidMonth]
+		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month month)
+		{
+			// Arrange
+			var sut = fixture.Create<Schedule>();
+
+			// Act
+			var result = sut.Until(month);
+
+			// Assert
+			result.Should().BeSameAs(sut);
+		} 
 	}
 }
