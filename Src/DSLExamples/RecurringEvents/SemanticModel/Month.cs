@@ -9,17 +9,17 @@ namespace DSLExamples.RecurringEvents.SemanticModel
 	{
 		const int MAX_MONTH_NUMBER = 12;
 
-		readonly uint _monthNumber;
+		readonly int _monthNumber;
 
-		public Month(uint monthNumber)
+		public Month(int monthNumber)
 		{
-			if(monthNumber > MAX_MONTH_NUMBER)
-				throw new ArgumentOutOfRangeException("monthNumber", monthNumber, "The supplied value is not a valid numeric value for a month");
+			if(monthNumber < 1 || monthNumber > MAX_MONTH_NUMBER)
+				throw new ArgumentOutOfRangeException("monthNumber", monthNumber, "The month number must be between 1 and 12");
 
 			_monthNumber = monthNumber;
 		}
 
-		public uint MonthNumber { get { return _monthNumber; } }
+		public int MonthNumber { get { return _monthNumber; } }
 
 		// ReSharper disable InconsistentNaming
 		public static readonly Month January = new Month(1);

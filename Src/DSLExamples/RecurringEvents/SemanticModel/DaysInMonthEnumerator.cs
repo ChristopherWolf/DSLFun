@@ -13,14 +13,10 @@ namespace DSLExamples.RecurringEvents.SemanticModel
 		readonly DateTime _start;
 		readonly DateTime _end;
 
-		public DaysInMonthEnumerator(uint month, uint year)
-			: this((int)month, (int)year)
-		{
-		}
-
-		DaysInMonthEnumerator(int month, int year)
+		public DaysInMonthEnumerator(int month, int year)
 		{
 			_start = new DateTime(year, month, 1);
+
 			_end = _start.AddMonths(1);
 		}
 

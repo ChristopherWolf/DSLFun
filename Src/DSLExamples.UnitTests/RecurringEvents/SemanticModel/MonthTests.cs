@@ -4,7 +4,6 @@ using Common.UnitTests.TestingHelpers;
 using DSLExamples.RecurringEvents.SemanticModel;
 using FluentAssertions;
 using Ploeh.AutoFixture;
-using Ploeh.SemanticComparison.Fluent;
 using Xunit;
 using Xunit.Extensions;
 
@@ -15,7 +14,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
-		public void MonthNumberShouldBeExposedCorrectly(Generator<uint> generator)
+		public void MonthNumberShouldBeExposedCorrectly(Generator<int> generator)
 		{
 			// Arrange
 
@@ -32,10 +31,23 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests
 		}
 
 		[Theory, AutoFakeItEasyData]
-		public void TheConstructorShouldThrowAnExceptionIfThePassedInMonthNumberIsNotValid(Generator<uint> generator)
+		public void TheConstructorShouldThrowAnExceptionIfThePassedInMonthNumberIsGreaterThan12(Generator<int> generator)
 		{
 			// Arrange
-			uint badMonthNumber = generator.First(x => x > 12);
+			var badMonthNumber = generator.First(x => x > 12);
+
+			// Act
+			Action action = () => new Month(badMonthNumber);
+
+			// Assert
+			action.ShouldThrow<ArgumentOutOfRangeException>();
+		}
+
+		[Fact]
+		public void TheConstructorShouldThrowAnExceptionIfThePassedInMonthNumberIsLessThan1()
+		{
+			// Arrange
+			const int badMonthNumber = -1;
 
 			// Act
 			Action action = () => new Month(badMonthNumber);

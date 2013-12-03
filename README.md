@@ -89,7 +89,7 @@ where V is a single nonterminal symbol, and w is a string of terminals and/or no
 ### Syntax Trees
 
 #### Parse Tree
-- An exact representatoin of your code's syntax according to your grammar
+- An exact representation of your code's syntax according to your grammar
 
 #### Abstract Syntax Tree
 - A tree representation of the abstract syntactic structure of source code. The syntax is "abstract" in not representing every detail appearing in the real syntax. For instance, grouping parentheses are implicit in the tree structure, and a syntactic construct like an if-condition-then expression may be denoted by means of a single node with two branches.

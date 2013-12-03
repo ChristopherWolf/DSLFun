@@ -14,10 +14,10 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests.DaysInM
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldBe(IFixture fixture, DateTime date)
+		public void ItShouldBeAnIEnumerable(IFixture fixture, DateTime date)
 		{
 			// Arrange
-			var sut = new DaysInMonthEnumerator((uint)date.Month, (uint)date.Year);
+			var sut = new DaysInMonthEnumerator(date.Month, date.Year);
 
 			// Act and Assert
 			sut.Should().BeAssignableTo<IEnumerable<DateTime>>();
@@ -27,15 +27,15 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests.DaysInM
 	public class WhenEnumeratingTheSut
 	{
 		[Theory, AutoFakeItEasyData]
-		public void ItShouldReturnExpectedValues(DateTime testDate)
+		public void ItShouldReturnTheExpectedDays(DateTime date)
 		{
 			// Arrange
-			var firstDayOfMonth = new DateTime(testDate.Year, testDate.Month, 1);
+			var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
 			var firstDayOfNextMonth = firstDayOfMonth.AddMonths(1);
 
-			var expected = GetDays(firstDayOfMonth, firstDayOfNextMonth).ToArray();
+			var expected = GetAllIndividualDaysBetween(firstDayOfMonth, firstDayOfNextMonth).ToArray();
 
-			var sut = new DaysInMonthEnumerator((uint)testDate.Month, (uint)testDate.Year);
+			var sut = new DaysInMonthEnumerator(date.Month, date.Year);
 
 			// Act
 			var result = sut.ToArray();
@@ -44,7 +44,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests.DaysInM
 			result.Should().Equal(expected);
 		}
 
-		IEnumerable<DateTime> GetDays(DateTime start, DateTime end)
+		IEnumerable<DateTime> GetAllIndividualDaysBetween(DateTime start, DateTime end)
 		{
 			// Remove time info from start date (we only care about day). 
 			var current = new DateTime(start.Year, start.Month, start.Day);
