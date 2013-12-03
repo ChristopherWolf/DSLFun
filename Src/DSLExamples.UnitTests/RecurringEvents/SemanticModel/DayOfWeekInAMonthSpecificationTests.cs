@@ -82,7 +82,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.DayOfWeekInAMonthS
 		{
 			// Arrange
 			var dateTime = new DateTime(year, month, day, 5, 5, 55);
-			var sut = new DayOfWeekInAMonthSpecification(index, dayOfWeek);
+			var sut = new DayOfWeekInAMonthSpecification(index, dayOfWeek); 
 
 			// Act
 			bool result = sut.IsSatisfiedBy(dateTime);
