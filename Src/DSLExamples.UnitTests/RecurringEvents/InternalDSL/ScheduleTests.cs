@@ -26,7 +26,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 
 			fixture.Register(() =>
 				{
-					var monthNumber = generator.First(x => x > 1 && x < 12);
+					var monthNumber = generator.First(x => x >= 1 && x <= 12);
 
 					return new Month(monthNumber);
 				});
@@ -161,7 +161,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 
 			// Assert
 			result.Should().NotBeNull();
-			result.StartingMonth.Should().BeSameAs(month);
+			result.PeriodStart.Should().BeSameAs(month);
 		}
 
 		[Theory, ValidMonth]
@@ -178,50 +178,78 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 		}
 	}
 
-//	public class WhenTestingTheUntilMethod
-//	{
-//		[Theory, ValidMonth]
-//		public void ItShouldReturnTheCorrectCompositeSpecification(IFixture fixture, Month startMonth, Month month)
-//		{
-//			// Arrange
-//			var lhsSpec = fixture.Create<ISpecification<DateTime>>();
-//			A.CallTo(() => lhsSpec.ToString()).Returns("LHS Spec");
-//
-//			var rhsSpec = fixture.Create<ISpecification<DateTime>>();
-//			A.CallTo(() => rhsSpec.ToString()).Returns("RHS Spec");
-//
-//			var additional = new Schedule(rhsSpec);
-//			var sut = new Schedule(lhsSpec);
-//
-//			var likness = lhsSpec.AsSource()
-//								.OfLikeness<AndSpecification<DateTime>>()
-//								.With(x => x.LHS).EqualsWhen((single, composite) => composite.LHS == lhsSpec)
-//								.With(x => x.RHS).EqualsWhen((single, composite) => composite.RHS == rhsSpec);
-//
-//			// Act
-//			var result = sut.Until(month);
-//
-//			// Assert
-//			result.Should().NotBeNull();
-//			result.Content.Should().NotBeNull();
-//			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
-//
-//			likness.ShouldEqual(result.Content.As<AndSpecification<DateTime>>());
-//		}
-//
-//		[Theory, ValidMonth]
-//		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month startMonth, Month month)
-//		{
-//			// Arrange
-//			var sut = fixture.Create<Schedule>();
-//
-//			sut.From(startMonth);
-//
-//			// Act
-//			var result = sut.Until(month);
-//
-//			// Assert
-//			result.Should().BeSameAs(sut);
-//		} 
-//	}
+	public class WhenTestingTheUntilMethod
+	{
+		[Theory, ValidMonth]
+		public void ItShouldReturnAnAndCompositeSpecificationWithTheCorrectLHS(IFixture fixture, Month startMonth, Month endMonth)
+		{
+			// Arrange
+			var lhsSpec = fixture.Create<ISpecification<DateTime>>();
+			A.CallTo(() => lhsSpec.ToString()).Returns("LHS Spec");
+
+			var sut = new Schedule(lhsSpec);
+
+			sut.From(startMonth);
+
+			// Act
+			var result = sut.Until(endMonth);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Content.Should().NotBeNull();
+			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
+
+			var compositeSpec = result.Content.As<AndSpecification<DateTime>>();
+
+			compositeSpec.LHS.Should().BeSameAs(lhsSpec);
+		}
+
+		[Theory, ValidMonth]
+		public void ItShouldReturnAnAndCompositeSpecificationWithTheCorrectRHS(IFixture fixture, Month startMonth, Month endMonth)
+		{
+			// Arrange
+			var rhsSpec = fixture.Create<ISpecification<DateTime>>();
+			A.CallTo(() => rhsSpec.ToString()).Returns("RHS Spec");
+
+			var expectedSpec = new PeriodInYear(startMonth.MonthNumber, endMonth.MonthNumber);
+
+			var sut = fixture.Create<Schedule>();
+
+			sut.From(startMonth);
+
+			var likness = expectedSpec.AsSource()
+			                      .OfLikeness<PeriodInYear>();
+
+			// Act
+			var result = sut.Until(endMonth);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Content.Should().NotBeNull();
+			result.Content.Should().BeOfType<AndSpecification<DateTime>>();
+
+			var compositeSpec = result.Content.As<AndSpecification<DateTime>>();
+
+			compositeSpec.RHS.Should().BeOfType<PeriodInYear>();
+
+			var periodInYearSpec = compositeSpec.RHS.As<PeriodInYear>();
+
+			likness.ShouldEqual(periodInYearSpec);
+		}
+
+		[Theory, ValidMonth]
+		public void ItShouldReturnTheSutToContinueTheFluentChain(IFixture fixture, Month startMonth, Month endMonth)
+		{
+			// Arrange
+			var sut = fixture.Create<Schedule>();
+
+			sut.From(startMonth);
+
+			// Act
+			var result = sut.Until(endMonth);
+
+			// Assert
+			result.Should().BeSameAs(sut);
+		} 
+	}
 }

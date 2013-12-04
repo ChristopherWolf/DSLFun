@@ -27,7 +27,7 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 		/// <summary>
 		/// A Context Variable to hold the starting month of the Schedule period.
 		/// </summary>
-		public Month StartingMonth { get; private set; }
+		public Month PeriodStart { get; private set; }
 
 		public static Schedule First(DayOfWeek dayOfWeek)
 		{
@@ -46,26 +46,30 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 			return this;
 		}
 
-		public Schedule From(Month month)
+		public Schedule From(Month periodStart)
 		{
-			if (month == null) throw new ArgumentNullException("month");
+			if (periodStart == null) throw new ArgumentNullException("periodStart");
 
-			if(StartingMonth != null)
+			if(PeriodStart != null)
 				throw new InvalidOperationException("The starting month has already been set");
 
-			StartingMonth = month;
+			PeriodStart = periodStart;
 
 			return this;
 		}
 
-		public Schedule Until(Month month)
+		public Schedule Until(Month periodEnd)
 		{
-			if (month == null) throw new ArgumentNullException("month");
+			if (periodEnd == null) throw new ArgumentNullException("periodEnd");
 
-			if(StartingMonth == null)
-				throw new InvalidOperationException("The starting month must be set first");
+			if(PeriodStart == null)
+				throw new InvalidOperationException("The starting period must be set first");
 
-			return null;
+			var periodInYearSpec = new PeriodInYear(PeriodStart.MonthNumber, periodEnd.MonthNumber);
+
+			Content = Content.And(periodInYearSpec);
+
+			return this;
 		}
 	}
 }
