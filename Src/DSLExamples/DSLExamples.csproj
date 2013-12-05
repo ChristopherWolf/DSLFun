@@ -38,6 +38,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProgressiveInterfaces\EmailMessage.cs" />
+    <Compile Include="ProgressiveInterfaces\EmailMessageBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecurringEvents\InternalDSL\Schedule.cs" />
     <Compile Include="RecurringEvents\SemanticModel\AndSpecification.cs" />
