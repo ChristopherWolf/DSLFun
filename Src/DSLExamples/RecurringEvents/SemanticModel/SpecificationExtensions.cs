@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Specifications
+namespace DSLExamples.RecurringEvents.SemanticModel
 {
 	public static class SpecificationExtensions
 	{

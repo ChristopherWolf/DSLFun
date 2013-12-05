@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Common.Specifications;
 using DSLExamples.RecurringEvents.SemanticModel;
 using FluentAssertions;
 using Ploeh.AutoFixture;

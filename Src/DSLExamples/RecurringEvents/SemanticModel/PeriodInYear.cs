@@ -1,5 +1,4 @@
 using System;
-using Common.Specifications;
 
 namespace DSLExamples.RecurringEvents.SemanticModel
 {

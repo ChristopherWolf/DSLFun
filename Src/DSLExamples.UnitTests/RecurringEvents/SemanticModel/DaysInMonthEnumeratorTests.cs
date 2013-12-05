@@ -8,7 +8,7 @@ using Ploeh.AutoFixture;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests.DaysInMonthEnumeratorTests
+namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.DaysInMonthEnumeratorTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints

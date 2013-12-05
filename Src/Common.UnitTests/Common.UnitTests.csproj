@@ -82,11 +82,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Specifications\AndSpecificationTests.cs" />
-    <Compile Include="Specifications\NotSpecificationTests.cs" />
-    <Compile Include="Specifications\OrSpecificationTests.cs" />
-    <Compile Include="Specifications\SpecificationExtensionsTests.cs" />
-    <Compile Include="Specifications\TestType.cs" />
     <Compile Include="TestingHelpers\AutoFakeItEasyDataAttribute.cs" />
     <Compile Include="EnumerableExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

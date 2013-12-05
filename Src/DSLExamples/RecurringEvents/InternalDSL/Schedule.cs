@@ -1,5 +1,4 @@
 ﻿using System;
-using Common.Specifications;
 using DSLExamples.RecurringEvents.SemanticModel;
 using PeriodInYear = DSLExamples.RecurringEvents.SemanticModel.PeriodInYear;
 

@@ -1,5 +1,5 @@
-﻿using Common.Specifications;
-using Common.UnitTests.TestingHelpers;
+﻿using Common.UnitTests.TestingHelpers;
+using DSLExamples.RecurringEvents.SemanticModel;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
@@ -7,7 +7,7 @@ using Xunit.Extensions;
 using Ploeh.SemanticComparison.Fluent;
 
 // ReSharper disable CheckNamespace
-namespace Common.UnitTests.Specifications.SpecificationExtensionsTests
+namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.SpecificationExtensionsTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenUsingTheAndExtensionMethod

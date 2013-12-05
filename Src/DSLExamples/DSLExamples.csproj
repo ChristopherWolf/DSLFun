@@ -40,10 +40,15 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecurringEvents\InternalDSL\Schedule.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\AndSpecification.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DayOfWeekInAMonthSpecification.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DaysInMonthEnumerator.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\ISpecification.cs" />
     <Compile Include="RecurringEvents\SemanticModel\Month.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\NotSpecification.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\OrSpecification.cs" />
     <Compile Include="RecurringEvents\SemanticModel\PeriodInYear.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\SpecificationExtensions.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Command.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Controller.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Event.cs" />

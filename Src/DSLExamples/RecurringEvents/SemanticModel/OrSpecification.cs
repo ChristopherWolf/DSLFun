@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Common.Specifications
+namespace DSLExamples.RecurringEvents.SemanticModel
 {
-	public class AndSpecification<TItem> : ISpecification<TItem>
+	public class OrSpecification<TItem> : ISpecification<TItem>
 	{
 		readonly ISpecification<TItem> _lhs;
 		readonly ISpecification<TItem> _rhs;
@@ -11,7 +11,7 @@ namespace Common.Specifications
 
 		public ISpecification<TItem> RHS { get { return _rhs; } }
 
-		public AndSpecification(ISpecification<TItem> lhs, ISpecification<TItem> rhs)
+		public OrSpecification(ISpecification<TItem> lhs, ISpecification<TItem> rhs)
 		{
 			if (lhs == null) throw new ArgumentNullException("lhs");
 			if (rhs == null) throw new ArgumentNullException("rhs");
@@ -24,7 +24,7 @@ namespace Common.Specifications
 
 		public bool IsSatisfiedBy(TItem item)
 		{
-			return LHS.IsSatisfiedBy(item) && RHS.IsSatisfiedBy(item);
+			return LHS.IsSatisfiedBy(item) || RHS.IsSatisfiedBy(item);
 		}
 
 		#endregion

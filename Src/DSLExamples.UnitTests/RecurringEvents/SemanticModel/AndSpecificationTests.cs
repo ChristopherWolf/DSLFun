@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Common.Specifications;
-using Common.UnitTests.Specifications;
 using Common.UnitTests.TestingHelpers;
+using DSLExamples.RecurringEvents.SemanticModel;
+using DSLExamples.UnitTests.RecurringEvents.SemanticModel;
 using FakeItEasy;
 using FluentAssertions;
 using Ploeh.AutoFixture;
@@ -9,7 +9,7 @@ using Ploeh.AutoFixture.Idioms;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
-namespace Common.UnitTests.EnumerableExtensionsTests.Specifications.AndSpecificationTests
+namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.AndSpecificationTests
 // ReSharper restore CheckNamespace
 {
 	public class WhenVerifyingArchitecturalConstraints

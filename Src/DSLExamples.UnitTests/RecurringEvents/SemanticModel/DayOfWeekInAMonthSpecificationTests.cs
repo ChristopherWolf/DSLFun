@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using DSLExamples.RecurringEvents.SemanticModel;
 using FluentAssertions;

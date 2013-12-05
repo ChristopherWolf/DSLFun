@@ -1,5 +1,4 @@
 ﻿using System;
-using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using DSLExamples.RecurringEvents.InternalDSL;
 using DSLExamples.RecurringEvents.SemanticModel;

@@ -1,4 +1,4 @@
-﻿namespace Common.Specifications
+﻿namespace DSLExamples.RecurringEvents.SemanticModel
 {
 	public interface ISpecification<in TItem>
 	{
