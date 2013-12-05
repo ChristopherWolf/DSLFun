@@ -12,6 +12,7 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 	public class Schedule
 	{
 		const int FIRST_INDEX = 1;
+		const int THIRD_INDEX = 3;
 
 		public Schedule(ISpecification<DateTime> content)
 		{
@@ -32,7 +33,17 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 
 		public static Schedule First(DayOfWeek dayOfWeek)
 		{
-			var spec = new DayOfWeekInAMonthSpecification(FIRST_INDEX, dayOfWeek);
+			return CreateDayOfWeekInMonthSpecification(FIRST_INDEX, dayOfWeek);
+		}
+
+		public static Schedule Third(DayOfWeek dayOfWeek)
+		{
+			return CreateDayOfWeekInMonthSpecification(THIRD_INDEX, dayOfWeek);
+		}
+
+		static Schedule CreateDayOfWeekInMonthSpecification(int index, DayOfWeek dayOfWeek)
+		{
+			var spec = new DayOfWeekInAMonthSpecification(index, dayOfWeek);
 
 			return new Schedule(spec);
 		}

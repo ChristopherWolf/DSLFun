@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Common.Specifications;
 using Common.UnitTests.TestingHelpers;
 using DSLExamples.RecurringEvents.InternalDSL;
@@ -74,6 +73,37 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 
 			likeness.ShouldEqual(result.Content.As<DayOfWeekInAMonthSpecification>());
 		} 
+	}
+
+	public class WhenTestingTheThirdMethod
+	{
+		[Theory]
+		[InlineData(DayOfWeek.Monday)]
+		[InlineData(DayOfWeek.Tuesday)]
+		[InlineData(DayOfWeek.Wednesday)]
+		[InlineData(DayOfWeek.Thursday)]
+		[InlineData(DayOfWeek.Friday)]
+		[InlineData(DayOfWeek.Saturday)]
+		[InlineData(DayOfWeek.Sunday)]
+		public void ItShouldReturnTheExpectedInitializedSchedule(DayOfWeek dayOfWeek)
+		{
+			// Arrange
+			const int expectedIndex = 3;
+
+			var likeness = dayOfWeek.AsSource()
+									.OfLikeness<DayOfWeekInAMonthSpecification>()
+									.With(x => x.Index).EqualsWhen((dow, spec) => spec.Index == expectedIndex)
+									.With(x => x.DayOfWeek).EqualsWhen((dow, spec) => spec.DayOfWeek == dow);
+
+			// Act
+			var result = Schedule.Third(dayOfWeek);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Content.Should().BeOfType<DayOfWeekInAMonthSpecification>();
+
+			likeness.ShouldEqual(result.Content.As<DayOfWeekInAMonthSpecification>());
+		}
 	}
 
 	public class WhenTestingTheAndMethod

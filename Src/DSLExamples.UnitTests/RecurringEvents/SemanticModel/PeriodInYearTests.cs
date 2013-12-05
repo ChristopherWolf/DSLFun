@@ -5,6 +5,7 @@ using DSLExamples.RecurringEvents.SemanticModel;
 using FluentAssertions;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
+using Xunit;
 using Xunit.Extensions;
 
 // ReSharper disable CheckNamespace
@@ -38,18 +39,20 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.PeriodInYearTests
 
 	public class WhenTestingIfSpecificationIsCorrect
 	{
-		[Theory, ValidMonth]
-		public void ItShouldReturnCorrectValueIfDateMonthIsEqualToStartMonth(MonthTuple monthTuple, Generator<DateTime> dateTimeGenerator)
+		// Use a year and a day that is not also a valid month number
+		const int DUMMY_YEAR = 2013;
+		const int DUMMY_DAY = 20;
+
+		[Fact]
+		public void ItShouldReturnTrueIfDateMonthIsEqualToStartMonth()
 		{
 			// Arrange
-			var startMonth = monthTuple.StartMonth;
-			var endMonth = monthTuple.EndMonth;
+			var startMonth = new Month(1);
+			var endMonth = new Month(12);
+
+			var dateToTest = new DateTime(DUMMY_YEAR, startMonth.Number, DUMMY_DAY);
 
 			var sut = new PeriodInYear(startMonth, endMonth);
-
-			var dateToTest = dateTimeGenerator.First(x => x.Month == startMonth.Number);
-
-			var expectedResult = dateToTest.Month >= startMonth.Number && dateToTest.Month <= endMonth.Number;
 
 			// Act
 			var result = sut.IsSatisfiedBy(dateToTest);
@@ -58,84 +61,79 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.PeriodInYearTests
 			result.Should().BeTrue();
 		}
 
-		[Theory, ValidMonth]
-		public void ItShouldReturnCorrectValueIfDateMonthIsEqualToEndMonth(MonthTuple monthTuple, Generator<DateTime> dateTimeGenerator)
+		[Fact]
+		public void ItShouldReturnTrueIfDateMonthIsEqualToEndMonth()
 		{
 			// Arrange
-			var startMonth = monthTuple.StartMonth;
-			var endMonth = monthTuple.EndMonth;
+			var startMonth = new Month(1);
+			var endMonth = new Month(12);
+
+			var dateToTest = new DateTime(DUMMY_YEAR, endMonth.Number, DUMMY_DAY);
 
 			var sut = new PeriodInYear(startMonth, endMonth);
-
-			var dateToTest = dateTimeGenerator.First(x => x.Month == endMonth.Number);
-
-			var expectedResult = dateToTest.Month >= startMonth.Number && dateToTest.Month <= endMonth.Number;
 
 			// Act
 			var result = sut.IsSatisfiedBy(dateToTest);
 
 			// Assert
-			result.Should().Be(expectedResult);
+			result.Should().BeTrue();
 		}
 
-		[Theory, ValidMonth]
-		public void ItShouldReturnCorrectValueIfDateMonthIsBetweenStartAndEnd(MonthTuple monthTuple, Generator<DateTime> dateTimeGenerator)
+		[Fact]
+		public void ItShouldReturnTrueIfDateMonthIsBetweenStartAndEnd()
 		{
 			// Arrange
-			var startMonth = monthTuple.StartMonth;
-			var endMonth = monthTuple.EndMonth;
+			var startMonth = new Month(1);
+			var endMonth = new Month(12);
+			var monthBetweenStartAndEnd = new Month(6);
+
+			var dateToTest = new DateTime(DUMMY_YEAR, monthBetweenStartAndEnd.Number, DUMMY_DAY);
 
 			var sut = new PeriodInYear(startMonth, endMonth);
-
-			var dateToTest = dateTimeGenerator.First(x => x.Month > startMonth.Number && x.Month < endMonth.Number);
-
-			var expectedResult = dateToTest.Month >= startMonth.Number && dateToTest.Month <= endMonth.Number;
 
 			// Act
 			var result = sut.IsSatisfiedBy(dateToTest);
 
 			// Assert
-			result.Should().Be(expectedResult);
+			result.Should().BeTrue();
 		}
 
-		[Theory, ValidMonth]
-		public void ItShouldReturnCorrectValueIfDateMonthIsBeforeStartMonth(MonthGenerator monthGenerator, Generator<DateTime> dateTimeGenerator)
+		[Fact]
+		public void ItShouldReturnFalseIfDateMonthIsBeforeStartMonth()
 		{
 			// Arrange
-			var startMonth = monthGenerator.First(x => x.Number > 1 && x.Number < 12);
-			var endMonth = new Month(startMonth.Number + 1);
+			var startMonth = new Month(2);
+			var endMonth = new Month(12);
+			var monthBeforeStart = new Month(1);
+
+			var dateToTest = new DateTime(DUMMY_YEAR, monthBeforeStart.Number, DUMMY_DAY);
 
 			var sut = new PeriodInYear(startMonth, endMonth);
-
-			var dateToTest = dateTimeGenerator.First(x => x.Month < startMonth.Number);
-
-			var expectedResult = dateToTest.Month >= startMonth.Number && dateToTest.Month <= endMonth.Number;
 
 			// Act
 			var result = sut.IsSatisfiedBy(dateToTest);
 
 			// Assert
-			result.Should().Be(expectedResult);
+			result.Should().BeFalse();
 		}
 
-		[Theory, ValidMonth]
-		public void ItShouldReturnCorrectValueIfDateMonthIsAfterEndMonth(MonthGenerator monthGenerator, Generator<DateTime> dateTimeGenerator)
+		[Fact]
+		public void ItShouldReturnFalseIfDateMonthIsAfterEndMonth()
 		{
 			// Arrange
-			var endMonth = monthGenerator.First(x => x.Number > 1 && x.Number <= 12);
-			var startMonth = new Month(endMonth.Number - 1);
+			var startMonth = new Month(1);
+			var endMonth = new Month(11);
+			var monthAfterEnd = new Month(12);
+
+			var dateToTest = new DateTime(DUMMY_YEAR, monthAfterEnd.Number, DUMMY_DAY);
 
 			var sut = new PeriodInYear(startMonth, endMonth);
-
-			var dateToTest = dateTimeGenerator.First(x => x.Month > endMonth.Number);
-
-			var expectedResult = dateToTest.Month >= startMonth.Number && dateToTest.Month <= endMonth.Number;
 
 			// Act
 			var result = sut.IsSatisfiedBy(dateToTest);
 
 			// Assert
-			result.Should().Be(expectedResult);
+			result.Should().BeFalse();
 		}
 	}
 }
