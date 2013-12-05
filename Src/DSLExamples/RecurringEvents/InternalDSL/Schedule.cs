@@ -1,6 +1,7 @@
 ﻿using System;
 using Common.Specifications;
 using DSLExamples.RecurringEvents.SemanticModel;
+using PeriodInYear = DSLExamples.RecurringEvents.SemanticModel.PeriodInYear;
 
 namespace DSLExamples.RecurringEvents.InternalDSL
 {
@@ -65,7 +66,7 @@ namespace DSLExamples.RecurringEvents.InternalDSL
 			if(PeriodStart == null)
 				throw new InvalidOperationException("The starting period must be set first");
 
-			var periodInYearSpec = new PeriodInYear(PeriodStart.MonthNumber, periodEnd.MonthNumber);
+			var periodInYearSpec = new PeriodInYear(PeriodStart, periodEnd);
 
 			Content = Content.And(periodInYearSpec);
 

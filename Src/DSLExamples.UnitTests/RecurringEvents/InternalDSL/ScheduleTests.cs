@@ -16,33 +16,6 @@ using Xunit.Extensions;
 namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 // ReSharper restore CheckNamespace
 {
-	#region Customizations
-
-	internal class ValidMonthCustomization : ICustomization
-	{
-		public void Customize(IFixture fixture)
-		{
-			var generator = fixture.Create<Generator<int>>();
-
-			fixture.Register(() =>
-				{
-					var monthNumber = generator.First(x => x >= 1 && x <= 12);
-
-					return new Month(monthNumber);
-				});
-		}
-	}
-
-	public class ValidMonthAttribute : AutoFakeItEasyDataAttribute
-	{
-		public ValidMonthAttribute()
-			: base(new ValidMonthCustomization())
-		{
-		}
-	}
-
-	#endregion
-
 	public class WhenVerifyingArchitecturalConstraints
 	{
 		[Theory, ValidMonth]
@@ -211,7 +184,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.InternalDSL.ScheduleTests
 			var rhsSpec = fixture.Create<ISpecification<DateTime>>();
 			A.CallTo(() => rhsSpec.ToString()).Returns("RHS Spec");
 
-			var expectedSpec = new PeriodInYear(startMonth.MonthNumber, endMonth.MonthNumber);
+			var expectedSpec = new PeriodInYear(startMonth, endMonth);
 
 			var sut = fixture.Create<Schedule>();
 

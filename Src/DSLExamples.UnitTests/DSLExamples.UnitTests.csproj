@@ -82,10 +82,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RecurringEvents\CommonCustomizations.cs" />
     <Compile Include="RecurringEvents\InternalDSL\ScheduleTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DayOfWeekInAMonthSpecificationTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DaysInMonthEnumeratorTests.cs" />
     <Compile Include="RecurringEvents\SemanticModel\MonthTests.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\PeriodInYearTests.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\HistoryRecordingCommandChannel.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\ScenarioUsingCommandQueryApi.cs" />
     <Compile Include="SecuritySystem\IntegrationTests\CommandQueryApi\SecretPanelSemanticModel.cs" />

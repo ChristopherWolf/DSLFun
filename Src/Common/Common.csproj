@@ -42,7 +42,6 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Specifications\AndSpecification.cs" />
-    <Compile Include="Specifications\PeriodInYear.cs" />
     <Compile Include="Specifications\ISpecification.cs" />
     <Compile Include="Specifications\NotSpecification.cs" />
     <Compile Include="Specifications\OrSpecification.cs" />

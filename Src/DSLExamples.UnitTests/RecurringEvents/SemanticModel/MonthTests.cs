@@ -24,7 +24,7 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests
 			var sut = new Month(expected);
 
 			// Act
-			var result = sut.MonthNumber;
+			var result = sut.Number;
 
 			// Assert
 			result.Should().Be(expected);
@@ -60,84 +60,84 @@ namespace DSLExamples.UnitTests.RecurringEvents.SemanticModel.MonthTests
 		public void JanuaryShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.January.MonthNumber.Should().Be(1);
+			Month.January.Number.Should().Be(1);
 		}
 
 		[Fact]
 		public void FebruaryShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.February.MonthNumber.Should().Be(2);
+			Month.February.Number.Should().Be(2);
 		}
 
 		[Fact]
 		public void MarchShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.March.MonthNumber.Should().Be(3);
+			Month.March.Number.Should().Be(3);
 		}
 
 		[Fact]
 		public void AprilShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.April.MonthNumber.Should().Be(4);
+			Month.April.Number.Should().Be(4);
 		}
 
 		[Fact]
 		public void MayShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.May.MonthNumber.Should().Be(5);
+			Month.May.Number.Should().Be(5);
 		}
 
 		[Fact]
 		public void JuneShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.June.MonthNumber.Should().Be(6);
+			Month.June.Number.Should().Be(6);
 		}
 
 		[Fact]
 		public void JulyShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.July.MonthNumber.Should().Be(7);
+			Month.July.Number.Should().Be(7);
 		}
 
 		[Fact]
 		public void AugustShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.August.MonthNumber.Should().Be(8);
+			Month.August.Number.Should().Be(8);
 		}
 
 		[Fact]
 		public void SeptemberShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.September.MonthNumber.Should().Be(9);
+			Month.September.Number.Should().Be(9);
 		}
 
 		[Fact]
 		public void OctoberShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.October.MonthNumber.Should().Be(10);
+			Month.October.Number.Should().Be(10);
 		}
 
 		[Fact]
 		public void NovemberShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.November.MonthNumber.Should().Be(11);
+			Month.November.Number.Should().Be(11);
 		}
 
 		[Fact]
 		public void DecemberShouldHaveTheCorrectMonthNumber()
 		{
 			// Assert
-			Month.December.MonthNumber.Should().Be(12);
+			Month.December.Number.Should().Be(12);
 		}
 	}
 }

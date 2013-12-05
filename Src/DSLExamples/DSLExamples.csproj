@@ -43,6 +43,7 @@
     <Compile Include="RecurringEvents\SemanticModel\DayOfWeekInAMonthSpecification.cs" />
     <Compile Include="RecurringEvents\SemanticModel\DaysInMonthEnumerator.cs" />
     <Compile Include="RecurringEvents\SemanticModel\Month.cs" />
+    <Compile Include="RecurringEvents\SemanticModel\PeriodInYear.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Command.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Controller.cs" />
     <Compile Include="SecuritySystem\SemanticModel\Event.cs" />

@@ -7,19 +7,20 @@ namespace DSLExamples.RecurringEvents.SemanticModel
 	/// </summary>
 	public class Month
 	{
+		const int MIN_MONTH_NUMBER = 1;
 		const int MAX_MONTH_NUMBER = 12;
 
-		readonly int _monthNumber;
+		readonly int _number;
 
-		public Month(int monthNumber)
+		public Month(int number)
 		{
-			if(monthNumber < 1 || monthNumber > MAX_MONTH_NUMBER)
-				throw new ArgumentOutOfRangeException("monthNumber", monthNumber, "The month number must be between 1 and 12");
+			if (number < MIN_MONTH_NUMBER || number > MAX_MONTH_NUMBER)
+				throw new ArgumentOutOfRangeException("number", number, string.Format("The month number must be between {0} and {1}", MIN_MONTH_NUMBER, MAX_MONTH_NUMBER));
 
-			_monthNumber = monthNumber;
+			_number = number;
 		}
 
-		public int MonthNumber { get { return _monthNumber; } }
+		public int Number { get { return _number; } }
 
 		// ReSharper disable InconsistentNaming
 		public static readonly Month January = new Month(1);
@@ -35,5 +36,39 @@ namespace DSLExamples.RecurringEvents.SemanticModel
 		public static readonly Month November = new Month(11);
 		public static readonly Month December = new Month(12);
 		// ReSharper restore InconsistentNaming
+
+		public override string ToString()
+		{
+			switch (Number)
+			{
+				case 1:
+					return "January";
+				case 2:
+					return "February";
+				case 3:
+					return "March";
+				case 4:
+					return "April";
+				case 5:
+					return "May";
+				case 6:
+					return "June";
+				case 7:
+					return "July";
+				case 8:
+					return "August";
+				case 9:
+					return "September";
+				case 10:
+					return "October";
+				case 11:
+					return "November";
+				case 12:
+					return "December";
+
+				default:
+					return "Unknown";
+			}
+		}
 	}
 }
