@@ -19,7 +19,7 @@ namespace DSLExamples.RecurringEvents.SemanticModel
 
 		public bool IsSatisfiedBy(TItem item)
 		{
-			return !_innerSpecification.IsSatisfiedBy(item);
+			return !InnerSpecification.IsSatisfiedBy(item);
 		}
 
 		#endregion
